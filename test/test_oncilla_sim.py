@@ -11,8 +11,8 @@ class TestOncillaSim:
         """Some Teard down"""
 
     def test_that_pass(self):
-        """ A really stupid test """
-        pass
+        """ A really stupid test : Please make one"""
+        assert False
 
 
 
