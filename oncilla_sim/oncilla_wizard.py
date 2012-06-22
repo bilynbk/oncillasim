@@ -4,18 +4,20 @@ import sys
 
 from wizard_helpers import *
 
-tmpldir = '/tmp/oncwzrd'
+tmpldir = '/tmp/oncwzrdtmpl'
+tmplgitdir = '/tmp/oncwzrdgit'
 
 def create_project(path):
     print 'Creating new Oncilla Simulation Webots Project at > '+path
     # Check if path is empty, then use / create
-    create_new_project_folder(path)
-    
-    # Check for a clean liboncilla-webots repository for the project template
+    if not check_if_project_folder_empty(path):
+        print 'Could not create project folder'
+        return False
+        
     provide_project_template(tmpldir)
     
     # Export template to new project folder
-    export_template_to_new_project(tmpldir)
+    export_template_to_new_project(tmpldir, path)
     
     # Checks?
     
@@ -26,7 +28,8 @@ def create_project(path):
 def update_project(path):
     print 'Updating Oncilla Simulation Webots Project at > '+path
     # Check, if path is indeed already a project
-    check_for_project_folder(path)
+    if not check_for_project_folder(path):
+        print 'Folder doesn`t seem to be a proper project folder'
     
     # Check for a clean liboncilla-webots repository for the project template
     provide_project_template(tmpldir)
