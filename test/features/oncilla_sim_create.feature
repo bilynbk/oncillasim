@@ -4,11 +4,11 @@ Feature: Create a new project
   I would like to create a new project
 
   Scenario: Create a new Oncilla project in a non existing
-    Given I have a non existing tree
+    Given I have a non existing tree /tmp/nonexisting
     When I ask to create the project tree
     Then I should have a ready to use project tree
 
-  Scenario: Create a new Oncilla project in an non-empty tre
+  Scenario: Create a new Oncilla project in an non-empty tree
     Given I have a non-empty tree
     When I ask to create the project tree
     Then I should get an error "non empty"
@@ -17,7 +17,6 @@ Feature: Create a new project
     Given I have an existing Oncilla project tree
     When I ask to create the project tree
     Then I should get an error "update needed"
-
 
   Scenario: Create a new Oncilla project in an already existing Webots tree
     Given I have a Webots project tree

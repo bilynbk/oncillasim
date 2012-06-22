@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
-from lettuce import step
+import os
+import sys
+
+from lettuce import *
+
+from oncilla_wizard import *
 
 ################################################################################
 # Given
 ################################################################################
 
-@step(u'Given I have a non existing tree')
-def given_i_have_a_non_existing_tree(step):
-    assert False, 'This step must be implemented'
+@step(u'Given I have a non existing tree ([\w\/]+)')
+def given_i_have_a_non_existing_tree(step, path):
+    world.path = path
 
 @step(u'Given I have a non-empty tree')
 def given_i_have_a_non_empty_tree(step):
-    assert False, 'This step must be implemented'
+    world.path = '.'
 
 @step(u'Given I have a Webots project tree')
 def given_i_have_an_existing_webots_project_tree(step):
@@ -40,11 +45,11 @@ def given_i_made_some_modification_to_the_project_tree(step):
 
 @step(u'When I ask to create the project tree')
 def when_i_ask_to_create_the_project_tree(step):
-    assert False, 'This step must be implemented'
+    create_project(world.path)
 
 @step(u'When I ask to update the project tree')
 def when_i_ask_to_update_the_project_tree(step):
-    assert False, 'This step must be implemented'
+    update_project(world.path)
 
 @step(u'When I say yes')
 def when_i_say_yes(step):
@@ -56,7 +61,8 @@ def when_i_say_yes(step):
 
 @step(u'Then I should have a ready to use project tree')
 def then_i_should_have_a_ready_to_use_project_tree(step):
-    assert False, 'This step must be implemented'
+    assert os.path.exists(os.path.abspath(world.path + '/worlds'))
+    assert os.path.exists(os.path.abspath(world.path + '/plugins'))
 
 @step(u'Then I should get an error "([^"]*)"')
 def then_i_should_get_an_error_group1(step, group1):
