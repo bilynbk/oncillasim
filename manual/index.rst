@@ -1,7 +1,7 @@
-.. _cca:
+.. _oncillasim:
 
-Welcome to the |project| Manual! (for version |version|)
-========================================================
+|project| Manual (for version |version|)
+========================================
 
 |project| is the central project for the Oncilla Quadruped Simulation, developed
 in the `AMARSi`_ project.
@@ -14,6 +14,8 @@ Contents:
    :maxdepth: 2
 
    preparation
+   wizard
+   examples
 
 .. toctree::
    :hidden:
