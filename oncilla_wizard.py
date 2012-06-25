@@ -4,7 +4,7 @@
 #
 import os
 import sys
-from optparse import OptionParser
+from argparse import ArgumentParser
 from wizard_helpers import *
 
 tmpldir = '/tmp/oncwzrdtmpl'
@@ -14,8 +14,7 @@ def create_project(path):
     print 'Creating new Oncilla Simulation Webots Project at > '+path
     # Check if path is empty, then use / create
     if not check_if_project_folder_empty(path):
-        print 'Could not create project folder'
-        return False
+        exit('Could not create project folder')
         
     provide_project_template(tmpldir)
     
@@ -42,25 +41,19 @@ def update_project(path):
     # Checks?
          
 def main():
-    usage = "Usage: %prog [options] [create_project / update_project]"
-    parser = OptionParser(usage)
-    parser.add_option("-p", "--path", dest="path",
-                      help="path / destination of the project")
-    parser.add_option("-q", "--quiet",
-                      action="store_true", dest="verbose")
-    (options, args) = parser.parse_args()
+    usage = "Usage: %prog [options] (create_project / update_project) path"
+    parser = ArgumentParser()
+    parser.add_argument("-q", "--quiet", action='count', help="be quiet")
+    parser.add_argument("command", help="command, either 'create' or 'update'")
+    parser.add_argument("path", help="path / destination of the project")
+    args = parser.parse_args()
     
-    if len(args) != 1:
-        parser.error("Incorrect number of arguments.")
-    if options.path==None:
-        parser.error("Please provide a project path.")
-        
-    if args[0]=="create_project":
-        create_project(options.path)
-    elif args[0]=="create_project":
-        update_project(options.path)
+    if args.command == "create":
+        create_project(args.path)
+    elif args.command == "update":
+        update_project(args.path)
     else:
         parser.error("Unknown argument. Use either 'create_project' or 'update_project'.")
 
 if __name__ == '__main__':
-  main()
+    main()
