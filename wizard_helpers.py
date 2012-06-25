@@ -70,9 +70,12 @@ def check_for_project_folder(path):
     return True
 
 def export_template_to_new_project(tmpl, path):
+    data_dir = tmpl+"/liboncilla-webots/webots-data"
+    rci_examples_dir = tmpl+"/liboncilla/examples/"
+    cca_examples_dir = tmpl+"/cca-oncilla/examples/"
     
     # Export basic project structure
-    shutil.copytree(tmpl+"/liboncilla-webots/webots-data",
+    shutil.copytree(data_dir,
                     path,
                     symlinks=False,
                     ignore=shutil.ignore_patterns('.git*'))
@@ -83,8 +86,11 @@ def export_template_to_new_project(tmpl, path):
             os.makedirs(path+'/controllers/'+folder)
     
     # Copy and compile example 1
-    shutil.copy(tmpl+"/liboncilla/examples/SimpleSineMovement.cpp",
+    shutil.copy(rci_examples_dir+"/SimpleSineMovement.cpp",
                     path+'/controllers/'+examples[0]+'/'+examples[0]+'.cpp')
+    shutil.copy(data_dir+'/controllers/with-rci/Makefile',
+                    path+'/controllers/'+examples[0]+'/')
+    os.system('make --directory='+path+'/controllers/'+examples[0])
     
     # Create world files
     # We have to replace the controller in the world files
@@ -96,4 +102,5 @@ def export_template_to_new_project(tmpl, path):
          fn.write(world)
          
 def change_webots_controller(world_orig, controller):
-    return string.replace(world_orig, "development_controller", controller)
+    old = '"None"'
+    return string.replace(world_orig, old, '"'+controller+'"')
