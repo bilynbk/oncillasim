@@ -3,6 +3,7 @@ import os
 import sys
 import string
 import shutil
+import filecmp
 
 from git import *
 
@@ -13,6 +14,9 @@ class WebotsTemplate:
     onc_path = None
     cca_path = None
     data_path = None
+    sync_ignore = False
+    sync_overwrite = False
+    foo = 0
     
     def __init__(self, path, verbosity=True):
         self.verbose = verbosity
@@ -46,7 +50,7 @@ class WebotsTemplate:
         
     def update(self):
         if self.verbose:
-            print 'Updating project template'        
+            print 'Updating project template at', self.tmpl_path        
         
         # Fetch updates for liboncilla-webots
         if self.verbose:
@@ -95,13 +99,18 @@ class WebotsTemplate:
         return True        
     
     def createSkeleton(self, target):
+        if self.verbose:
+            print '* Creating Project Skeleton'
         shutil.copytree(self.data_path,
             target,
             symlinks=False,
             ignore=shutil.ignore_patterns('.git*'))
+            
+    def updateSkeleton(self, target):
         if self.verbose:
-            print '* Created Project Skeleton'
-    
+            print '* Updating Project Skeleton'        
+        self.sync(self.data_path, self.data_path, target)
+
     def createRCIExample(self, target):
         examples = ['Example1']
         for folder in examples:
@@ -124,7 +133,7 @@ class WebotsTemplate:
                 print '* Created RCI Example:', target + "/worlds" + '/' + controller + ".wbt"
                 
         return examples
-               
+
     def createCCAExamples(self, target):
         examples = ['Example2']
         for folder in examples:
@@ -153,3 +162,78 @@ class WebotsTemplate:
         world_orig = fo.read()
         old = '@CONTROLLER@'
         return string.replace(world_orig, old, controller)
+    
+    def sync(self, syncdir, src, dest):
+        self.foo = self.foo + 1 
+        
+        # If folder doesn't exist, create it 
+        for root, dirs, files in os.walk(syncdir, topdown=False):
+            for name in dirs:
+                required_folder = os.path.join(dest, os.path.relpath(os.path.join(root, name), syncdir))
+                if not os.path.exists(required_folder):
+                    os.makedirs(required_folder)
+                    if self.verbose:
+                        print '** Created', required_folder
+
+        # If file doesn exist, copy it
+        # If file is the same, ignore it
+        # If file is different, ask for solution
+        for root, dirs, files in os.walk(syncdir, topdown=False):
+            for name in files:
+                # Ignore hidden and .in files
+                if name.startswith(".") or name.endswith(".in"):
+                    continue
+                
+                required_file = os.path.join(dest, os.path.relpath(os.path.join(root, name), syncdir))
+                
+                # File is new, copy it
+                srcfile = os.path.join(root, name)
+                destfile = os.path.join(dest, os.path.relpath(os.path.join(root, name), syncdir))
+                if not os.path.exists(required_file):
+                    shutil.copyfile(srcfile, destfile)
+                    if self.verbose:
+                        print '** Copied', srcfile,' to ',destfile
+                else:
+                    # File exists, compare
+                    if filecmp.cmp(srcfile, destfile):
+                        # Files are the same, ignore
+                        continue
+                    else:
+                        # Files not the same, handle that
+                        if self.sync_ignore:
+                            continue # Ignore file
+                        elif self.sync_overwrite:
+                            shutil.copyfile(srcfile, destfile) # Overwrite file
+                            if self.verbose:
+                                print '** Copied', srcfile,' to ',destfile
+                        else:
+                            if self.askForOverwriting(destfile):
+                                shutil.copyfile(srcfile, destfile) # Overwrite file
+                                if self.verbose:
+                                    print '** Copied', srcfile,' to ',destfile
+                            else:
+                                continue # Ignore file
+                                
+                            
+    def askForOverwriting(self, filename):
+        question = "File '"+filename+"' was edited locally, should we overwrite it?\n"+ \
+                   "[y] yes - [o] overwrite all - [n] ignore - [i] ignore all\n"
+        prompt = '[y/o/N/i]'
+                    
+        valid = {"y":True, "o":True, "n":False, "i":False}
+    
+        while True:
+            sys.stdout.write(str(question) + prompt)
+            choice = raw_input().lower()
+            
+            if choice == 'i':
+                self.sync_ignore = True
+            elif choice == 'o':
+                self.sync_overwrite = True
+            
+            if choice == '' or choice == 'n' or choice == 'i':
+                return False
+            elif choice == 'y' or choice == 'o':
+                return True
+            else:
+                sys.stdout.write("Please respond with one of [y/o/N/i]")

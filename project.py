@@ -26,7 +26,7 @@ class WebotsProject:
             print 'Creating project at', self.proj_path
             
         if not self.isEmpty():
-            if self.isASimulationProject():
+            if self.isProjectFolder():
                 exit('''The given folder, seems to be a simulation project already. Try updating.''')
             else:
                 exit('''The given folder is not empty, but doesn`t seem to be a simulation project. Try another path.''')
@@ -38,8 +38,19 @@ class WebotsProject:
             self.compileExamples()
         
     def update(self, template):
+        if (not self.isEmpty()) \
+            and (not self.isProjectFolder()):
+            exit('''The given folder is not empty, but doesn`t seem to be a simulation project.''') 
+        
         if self.verbose:
             print 'Updating project at', self.proj_path
+        
+        template.updateSkeleton(self.proj_path)
+        exit('Error: Updating a project is not yet implemented.')
+        self.rciexamples = template.updateRCIExample(self.proj_path)
+        self.ccaexamples = template.updateCCAExamples(self.proj_path)
+        self.compilePlugins()
+        self.compileExamples()
         
     def isEmpty(self):
         if os.path.exists(self.proj_path):
@@ -48,18 +59,14 @@ class WebotsProject:
             return True
     
     """
-    Check, if the given path is a valid simulation project. Features are for
-    example, required folders
+    Check if given project folder actually contains a project
     """
-    def isASimulationProject(self):
-        if self.isEmpty():
-            return False
-        if not os.path.exists(os.path.join(self.proj_path, 'worlds')):
-            return False
-        if not os.path.exists(os.path.join(self.proj_path, 'plugins')):
-            return False
-        if not os.path.exists(os.path.join(self.proj_path, 'controllers')):
-            return False
+    def isProjectFolder(self):
+        if os.path.exists(os.path.join(self.proj_path, 'controllers')) \
+            or os.path.exists(os.path.join(self.proj_path, 'worlds')) \
+            or os.path.exists(os.path.join(self.proj_path, 'plugins')):
+            return True
+        return False
 
     """
     Compiles the physics plugin, necessary for libwebots 

@@ -32,7 +32,10 @@ class Wizard:
         
     def createProject(self):
         if not self.project.isEmpty():
-            exit('Project path is not empty. Try updating.')
+            if self.project.isProjectFolder():
+                exit('Error: Given path is not empty. Try updating instead.')
+            else:
+                exit('Error: Given path is not empty. Try another folder.')
         else:
             self.template.prepare()
             self.project.create(self.template)
@@ -40,11 +43,9 @@ class Wizard:
     def updateProject(self):
         if self.verbose:
             print 'Updating project at', self.proj_path
-        if self.project.isEmpty():
-            exit('Project path doesn`t point to a valid simulation project. Can`t update.')
-        else:
-            self.template.prepare()
-            self.project.update(self.template)
+        #exit('Error: Updating a project is not yet implemented.')
+        self.template.prepare()
+        self.project.update(self.template)
         
     def getWebotsHome(self):
         if self.verbose:
