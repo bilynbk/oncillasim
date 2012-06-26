@@ -7,10 +7,11 @@ from template import WebotsTemplate
 
 class WebotsProject:
     verbose = True
-    proj_path = ''
-    ctrl_path = ''
-    plugin_path = ''
-    worlds_path = ''
+    proj_path = None
+    ctrl_path = None
+    plugin_path = None
+    worlds_path = None
+    tmp_path = None
     rciexamples = None
     ccaexamples = None
     
@@ -20,6 +21,7 @@ class WebotsProject:
         self.ctrl_path = os.path.join(path, 'controllers')
         self.worlds_path = os.path.join(path, 'worlds')
         self.plugin_path = os.path.join(path, 'plugins/physics/liboncilla-webots-plugin')
+        self.tmp_path = os.path.join(self.proj_path, '.tmp') 
         
     def create(self, template):
         if self.verbose:
@@ -45,12 +47,17 @@ class WebotsProject:
         if self.verbose:
             print 'Updating project at', self.proj_path
         
-        template.updateSkeleton(self.proj_path)
-        exit('Error: Updating a project is not yet implemented.')
-        self.rciexamples = template.updateRCIExample(self.proj_path)
-        self.ccaexamples = template.updateCCAExamples(self.proj_path)
+        # First we create a temporary new project
+        shutil.rmtree(self.tmp_path)
+        template.createSkeleton(self.tmp_path)
+        self.rciexamples = template.createRCIExample(self.tmp_path)
+        self.ccaexamples = template.createCCAExamples(self.tmp_path)
+        if self.verbose:
+            print 'Syncing', self.tmp_path, 'and', self.proj_path
+        template.syncDir(self.tmp_path, self.tmp_path, self.proj_path)
         self.compilePlugins()
         self.compileExamples()
+        shutil.rmtree(self.tmp_path)
         
     def isEmpty(self):
         if os.path.exists(self.proj_path):

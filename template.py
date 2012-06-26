@@ -14,6 +14,7 @@ class WebotsTemplate:
     onc_path = None
     cca_path = None
     data_path = None
+    tmp_path = None
     sync_ignore = False
     sync_overwrite = False
     foo = 0
@@ -109,7 +110,7 @@ class WebotsTemplate:
     def updateSkeleton(self, target):
         if self.verbose:
             print '* Updating Project Skeleton'        
-        self.sync(self.data_path, self.data_path, target)
+        self.syncDir(self.data_path, self.data_path, target)
 
     def createRCIExample(self, target):
         examples = ['Example1']
@@ -124,6 +125,29 @@ class WebotsTemplate:
         # Makefile
         shutil.copy(self.data_path + '/controllers/with-rci/Makefile',
                         target + '/controllers/' + examples[0] + '/')
+        
+        # World files - we have to replace the controller in the world files
+        for controller in examples:
+            fn = open(os.path.join(target + "/worlds", controller + ".wbt"), "w+")
+            fn.write(self.get_world_file_for(controller))
+            if self.verbose:
+                print '* Created RCI Example:', target + "/worlds" + '/' + controller + ".wbt"
+                
+        return examples
+
+    def updateRCIExample(self, target):
+        examples = ['Example1']
+        for folder in examples:
+            if not os.path.exists(target + '/controllers/' + folder):
+                os.makedirs(target + '/controllers/' + folder)
+
+        # Example source
+        shutil.copy(self.onc_path + "/examples/SimpleSineMovement.cpp",
+                self.tmp_path + '/controllers/' + examples[0] + '/' + examples[0] + '.cpp')
+        
+        # Makefile
+        shutil.copy(self.data_path + '/controllers/with-rci/Makefile',
+                self.tmp_path + '/controllers/' + examples[0] + '/')
         
         # World files - we have to replace the controller in the world files
         for controller in examples:
@@ -163,7 +187,7 @@ class WebotsTemplate:
         old = '@CONTROLLER@'
         return string.replace(world_orig, old, controller)
     
-    def sync(self, syncdir, src, dest):
+    def syncDir(self, syncdir, src, dest):
         self.foo = self.foo + 1 
         
         # If folder doesn't exist, create it 
@@ -188,32 +212,35 @@ class WebotsTemplate:
                 
                 # File is new, copy it
                 srcfile = os.path.join(root, name)
-                destfile = os.path.join(dest, os.path.relpath(os.path.join(root, name), syncdir))
-                if not os.path.exists(required_file):
-                    shutil.copyfile(srcfile, destfile)
+                destfile = required_file
+                
+                self.syncFile(srcfile, destfile)
+                
+    def syncFile(self, srcfile, destfile):
+        if not os.path.exists(destfile):
+            shutil.copyfile(srcfile, destfile)
+            if self.verbose:
+                print '** Copied', srcfile,' to ',destfile
+        else:
+            # File exists, compare
+            if filecmp.cmp(srcfile, destfile):
+                # Files are the same, ignore
+                return
+            else:
+                # Files not the same, handle that
+                if self.sync_ignore:
+                    return
+                elif self.sync_overwrite:
+                    shutil.copyfile(srcfile, destfile) # Overwrite file
                     if self.verbose:
                         print '** Copied', srcfile,' to ',destfile
                 else:
-                    # File exists, compare
-                    if filecmp.cmp(srcfile, destfile):
-                        # Files are the same, ignore
-                        continue
+                    if self.askForOverwriting(destfile):
+                        shutil.copyfile(srcfile, destfile) # Overwrite file
+                        if self.verbose:
+                            print '** Copied', srcfile,' to ',destfile
                     else:
-                        # Files not the same, handle that
-                        if self.sync_ignore:
-                            continue # Ignore file
-                        elif self.sync_overwrite:
-                            shutil.copyfile(srcfile, destfile) # Overwrite file
-                            if self.verbose:
-                                print '** Copied', srcfile,' to ',destfile
-                        else:
-                            if self.askForOverwriting(destfile):
-                                shutil.copyfile(srcfile, destfile) # Overwrite file
-                                if self.verbose:
-                                    print '** Copied', srcfile,' to ',destfile
-                            else:
-                                continue # Ignore file
-                                
+                        return
                             
     def askForOverwriting(self, filename):
         question = "File '"+filename+"' was edited locally, should we overwrite it?\n"+ \
