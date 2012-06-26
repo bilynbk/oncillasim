@@ -45,27 +45,26 @@ class WebotsTemplate:
             return True
         
     def update(self):
-        print 'TODO: Updating project template'
+        if self.verbose:
+            print 'Updating project template'        
         
-        
-        # Make a blank checkout of liboncilla-webots
-        print '* Updating project template for liboncilla-webots ...'
+        # Fetch updates for liboncilla-webots
+        if self.verbose:
+            print '* Updating skeleton from liboncilla-webots ...'
         wrepo = Repo.init(path=self.ow_path)
-        origin = wrepo.remotes.origin    # get default remote by name
-        origin.refs                     # local remote references
-        origin.pull()
+        wrepo.git.remote("update", "origin")
         
-#        # Make a blank checkout of liboncilla for example 1
-#        print '* Updating examples for liboncilla ...'
-#        orepo = Repo.init()
-#        orepo.clone_from("https://anordman@redmine.amarsi-project.eu/git/quaddrivers.git",
-#                        self.onc_path, None, b="dev")
-#        
-#        # Make a blank checkout of cca-oncilla for examples 2-4
-#        print '* Updating examples for cca-oncilla ...'
-#        crepo = Repo.init()
-#        crepo.clone_from("https://anordman@redmine.amarsi-project.eu/git/oncilla-cca.git",
-#                        self.cca_path)
+        # Fetch updates for liboncilla for example 1
+        if self.verbose:
+            print '* Updating examples from liboncilla ...'
+        orepo = Repo.init()
+        wrepo.git.remote("update", "origin")
+
+        # Fetch updates for cca-oncilla for examples 2-4
+        if self.verbose:
+            print '* Updating examples from cca-oncilla ...'
+        crepo = Repo.init()
+        crepo.git.remote("update", "origin")
         
     def create(self):
         print 'Creating project template'
@@ -118,12 +117,9 @@ class WebotsTemplate:
                         target + '/controllers/' + examples[0] + '/')
         
         # World files - we have to replace the controller in the world files
-        fo = open(self.data_path + "/worlds/Oncilla.wbt.in", "r+")
-        world_orig = fo.read()
         for controller in examples:
-            world = self.change_webots_controller(world_orig, controller)
             fn = open(os.path.join(target + "/worlds", controller + ".wbt"), "w+")
-            fn.write(world)
+            fn.write(self.get_world_file_for(controller))
             if self.verbose:
                 print '* Created RCI Example:', target + "/worlds" + '/' + controller + ".wbt"
                 
@@ -144,17 +140,16 @@ class WebotsTemplate:
                         target + '/controllers/' + examples[0] + '/')
         
         # World files - we have to replace the controller in the world files
-        fo = open(self.data_path + "/worlds/Oncilla.wbt", "r+")
-        world_orig = fo.read()
         for controller in examples:
-            world = self.change_webots_controller(world_orig, controller)
             fn = open(os.path.join(target + "/worlds", controller + ".wbt"), "w+")
-            fn.write(world)
+            fn.write(self.get_world_file_for(controller))
             if self.verbose:
                 print '* Created CCA Example:', target + "/worlds" + '/' + controller + ".wbt"
                 
         return examples
                          
-    def change_webots_controller(self, world_orig, controller):
+    def get_world_file_for(self, controller):
+        fo = open(self.data_path + "/worlds/Oncilla.wbt.in", "r+")
+        world_orig = fo.read()
         old = '@CONTROLLER@'
         return string.replace(world_orig, old, controller)
