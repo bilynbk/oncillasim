@@ -70,11 +70,15 @@ def main():
     parser.add_argument("-o", "--offline-mode",
                   action="store_false", dest="online", default=True,
                   help="just copy and compile, don`t update from online repositories")
+    parser.add_argument("-t", "--template_path",
+                  dest="tmpl_path", default='/tmp/onc/tmpl',
+                  help="specify ")
     parser.add_argument("command", help="command, either 'create' or 'update'")
     parser.add_argument("path", help="path / destination of the project")
     args = parser.parse_args()
     
-    wizard = Wizard(args.path)
+    wizard = Wizard(args.path, verbose=args.verbose, online=args.online,
+                tmpl_path=args.tmpl_path)
     
     if args.command == "create":
         wizard.createProject()

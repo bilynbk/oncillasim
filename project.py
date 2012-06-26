@@ -75,10 +75,10 @@ class WebotsProject:
     def compileExamples(self):  
         if self.verbose:
             print 'Compiling Examples'
-        for example in self.rciexamples:
-            print '* Compiling RCI example', example
-            os.system('make --directory '+os.path.join(self.ctrl_path, example))
-        for example in self.ccaexamples:
-            print '* Compiling CCA example', example
-            os.system('make --directory '+os.path.join(self.ctrl_path, example))
             
+        for example in (self.rciexamples + self.ccaexamples):
+            print '* Compiling example', example
+            os.system('make --directory ' + os.path.join(self.ctrl_path, example))
+            # Check, if controller was built
+            if not os.path.exists(os.path.join(self.ctrl_path, example, example)):
+                exit('Error: Compilation of ' + example + ' failed.')

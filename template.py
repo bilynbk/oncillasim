@@ -8,11 +8,11 @@ from git import *
 
 class WebotsTemplate:
     verbose = True
-    tmpl_path = ''
-    ow_path = ''
-    onc_path = ''
-    cca_path = ''
-    data_path = ''
+    tmpl_path = None
+    ow_path = None
+    onc_path = None
+    cca_path = None
+    data_path = None
     
     def __init__(self, path, verbosity=True):
         self.verbose = verbosity
