@@ -43,6 +43,14 @@ rst_prolog = """
 .. _`rsc`:
 	http://code.cor-lab.org/svn/rsc
 
+.. _`rsb`:
+	http://docs.cor-lab.org/rsb-manual
+
+.. _`rst`:
+	http://docs.cor-lab.org/rst-manual
+
+.. _spread: http://www.spread.org
+
 .. _cmake: http://www.cmake.org/
 
 .. _google protocol buffers: http://code.google.com/p/protobuf/
@@ -198,14 +206,14 @@ man_pages = [
 
 intersphinx_mapping = {
     'python': ('http://docs.python.org/',                      None),
-
-    'rsb':    ('@ONCILLASIM_MANUAL_RSB_MANUAL_INVENTORY_DIR@',   None),
-    'rsbag':  ('@ONCILLASIM_MANUAL_RSBAG_MANUAL_INVENTORY_DIR@', None),
-    'rst':    ('@ONCILLASIM_MANUAL_RST_MANUAL_INVENTORY_DIR@',   None),
-
-    'cca':    ('@ONCILLASIM_MANUAL_CCA_MANUAL_INVENTORY_DIR@',   None),
-    'rci':    ('@ONCILLASIM_MANUAL_RCI_MANUAL_INVENTORY_DIR@',   None),
-
-    'liboncilla': ('@ONCILLASIM_MANUAL_LIBONCILLA_MANUAL_INVENTORY_DIR@', None),
-    'ccaoncilla': ('@ONCILLASIM_MANUAL_CCAONCILLA_MANUAL_INVENTORY_DIR@', None)
     }
+
+external_modules_list=os.environ['sphinx_external_modules']
+if  len(external_modules_list) > 0 :
+
+    for m in os.environ['sphinx_external_modules'].split(':'):
+        if os.environ.has_key(m):
+            intersphinx_mapping[m] = (os.environ[m], None)
+    
+
+
