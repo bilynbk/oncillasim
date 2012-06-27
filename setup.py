@@ -10,12 +10,18 @@ class BuildManual(Command):
         ('rsb-inventory-dir=',None,'Directory for RSB objects.inv file'),
         ('rsbag-inventory-dir=',None,'Directory for RSBAG objects.inv file'),
         ('rst-inventory-dir=',None,'Directory for RST objects.inv file')
+        ('cca-inventory-dir=',None,'Directory for CCA objects.inv file')
+        ('liboncilla-inventory-dir=',None,'Directory for liboncilla objects.inv file')
+        ('ccaoncilla-inventory-dir=',None,'Directory for CCA-oncilla objects.inv file')
         ]
 
     def initialize_options(self):
         self.rsb_inventory_dir = None
         self.rsbag_inventory_dir = None
         self.rst_inventory_dir = None
+        self.cca_inventory_dir = None
+        self.liboncilla_inventory_dir = None
+        self.ccaoncilla_inventory_dir = None
 
     def _finalize_option(self,name,value):
         if value is not None:
@@ -28,6 +34,9 @@ class BuildManual(Command):
         self._finalize_option('rsb',self.rsb_inventory_dir)
         self._finalize_option('rsbag',self.rsbag_inventory_dir)
         self._finalize_option('rst',self.rst_inventory_dir)
+        self._finalize_option('cca',self.cca_inventory_dir)
+        self._finalize_option('liboncilla',self.liboncilla_inventory_dir)
+        self._finalize_option('ccaoncilla',self.ccaoncilla_inventory_dir)
         os.environ['sphinx_external_modules']  = self.modules
         
     def run(self):
