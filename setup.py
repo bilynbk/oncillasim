@@ -9,9 +9,9 @@ class BuildManual(Command):
     user_options = [
         ('rsb-inventory-dir=',None,'Directory for RSB objects.inv file'),
         ('rsbag-inventory-dir=',None,'Directory for RSBAG objects.inv file'),
-        ('rst-inventory-dir=',None,'Directory for RST objects.inv file')
-        ('cca-inventory-dir=',None,'Directory for CCA objects.inv file')
-        ('liboncilla-inventory-dir=',None,'Directory for liboncilla objects.inv file')
+        ('rst-inventory-dir=',None,'Directory for RST objects.inv file'),
+        ('cca-inventory-dir=',None,'Directory for CCA objects.inv file'),
+        ('liboncilla-inventory-dir=',None,'Directory for liboncilla objects.inv file'),
         ('ccaoncilla-inventory-dir=',None,'Directory for CCA-oncilla objects.inv file')
         ]
 
