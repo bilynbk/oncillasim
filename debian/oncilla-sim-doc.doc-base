@@ -1,0 +1,11 @@
+Document: oncilla-sim
+Title: oncilla-sim manual
+Author: Arne Nordmann
+Abstract: Manual thatd escribes how to use the AMARSi Oncilla robot
+ simulation environment.
+Section: Science/Engineering
+
+
+Format: HTML
+Index: /usr/share/doc/oncilla-sim/manual/index.html
+Files: /usr/share/doc/liboncilla/manual/*
