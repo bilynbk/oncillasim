@@ -40,15 +40,17 @@ class WebotsProject:
             self.compileExamples()
         
     def update(self, template):
-        if (not self.isEmpty()) \
-            and (not self.isProjectFolder()):
-            exit('''The given folder is not empty, but doesn`t seem to be a simulation project.''') 
+        if self.isEmpty():
+            exit('''Error: The given folder is empty, can`t update.''') 
+        elif not self.isProjectFolder():
+            exit('''Error: The given folder is not empty, but doesn`t seem to be a simulation project.''') 
         
         if self.verbose:
             print 'Updating project at', self.proj_path
         
         # First we create a temporary new project
-        shutil.rmtree(self.tmp_path)
+        if os.path.exists(self.tmp_path):
+            shutil.rmtree(self.tmp_path)
         template.createSkeleton(self.tmp_path)
         self.rciexamples = template.createRCIExample(self.tmp_path)
         self.ccaexamples = template.createCCAExamples(self.tmp_path)
@@ -57,7 +59,8 @@ class WebotsProject:
         template.syncDir(self.tmp_path, self.tmp_path, self.proj_path)
         self.compilePlugins()
         self.compileExamples()
-        shutil.rmtree(self.tmp_path)
+        if os.path.exists(self.tmp_path):
+            shutil.rmtree(self.tmp_path)
         
     def isEmpty(self):
         if os.path.exists(self.proj_path):
