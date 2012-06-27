@@ -11,3 +11,8 @@
 
 %:
 	dh $@
+
+
+override_dh_auto_build:
+	dh_auto_build -- build_manual --liboncilla-inventory-dir=/usr/share/doc/liboncilla/manual/
+
