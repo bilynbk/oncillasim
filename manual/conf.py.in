@@ -207,5 +207,5 @@ intersphinx_mapping = {
     'rci':    ('@ONCILLASIM_MANUAL_RCI_MANUAL_INVENTORY_DIR@',   None),
 
     'liboncilla': ('@ONCILLASIM_MANUAL_LIBONCILLA_MANUAL_INVENTORY_DIR@', None),
-    'cca-oncilla': ('@ONCILLASIM_MANUAL_CCAONCILLA_MANUAL_INVENTORY_DIR@', None)
+    'ccaoncilla': ('@ONCILLASIM_MANUAL_CCAONCILLA_MANUAL_INVENTORY_DIR@', None)
     }
