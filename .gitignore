@@ -11,3 +11,5 @@ Makefile*
 cmake_*
 _build
 conf.py
+.pydevproject
+
