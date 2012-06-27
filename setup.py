@@ -1,8 +1,8 @@
 from distutils.core import setup, Command
 from distutils.filelist import findall
 
-import os
-import re
+import os,re,errno
+
 
 
 class BuildManual(Command):
@@ -44,6 +44,11 @@ class BuildManual(Command):
         os.system("sphinx-build -b html manual build/manual")
     
 
+try:
+    os.makedirs('build/manual')
+except OSError, e:
+    if e.errno != errno.EEXIST:
+        raise
 
 setup(
     name='oncilla-sim-project-wizard',
