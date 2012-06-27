@@ -1,6 +1,6 @@
 Format: http://dep.debian.net/deps/dep5
 Upstream-Name: oncilla-sim
-Source: <url://example.com>
+Source: http://redmine.amarsi-project.eu/projects/oncillasim
 
 Files: *
 Copyright: 2012 Arne Nordmann <anordman@cor-lab.uni-bielefeld.de>

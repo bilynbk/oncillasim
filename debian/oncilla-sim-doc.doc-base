@@ -8,4 +8,4 @@ Section: Science/Engineering
 
 Format: HTML
 Index: /usr/share/doc/oncilla-sim/manual/index.html
-Files: /usr/share/doc/liboncilla/manual/*
+Files: /usr/share/doc/oncilla-sim/manual/*

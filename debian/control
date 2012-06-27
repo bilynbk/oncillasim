@@ -10,18 +10,20 @@ Vcs-Git: http://redmine.amarsi-project.eu/git/oncillasim.git
 
 Package: oncilla-sim
 Architecture: all
-Depends: python-git, liboncilla-webots-dev, liboncilla-dev, webots,
+Depends: ${python:Depends}, python-git, liboncilla-webots-dev,
+ liboncilla-dev, webots,
  libcca-oncilla0.1-dev
 Suggests: oncilla-sim-doc
-Description: A wizard to easily install Oncilla Simulator.
+Description: Wizard that easily install Oncilla Robot simulator
  Oncilla is a robot from AMARSi project, this package install all what
  is needed to run the simulator and CCA framework
 
 
 Package: oncilla-sim-doc
 Architecture: all
+Section: doc
 Depends: liboncilla-doc
 Suggests: oncilla-sim
-Description: Documentation for oncilla-sim.
- Oncilla is a rbot from AMARSi project. This package install all
+Description: Documentation for oncilla-sim
+ Oncilla is a robot from AMARSi project. This package install all
  necessary documentation for the simulator
