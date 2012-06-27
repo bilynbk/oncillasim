@@ -1,0 +1,5 @@
+oncilla-sim (0.1.0rc1-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Wed, 27 Jun 2012 16:33:09 +0200
