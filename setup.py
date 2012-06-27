@@ -1,4 +1,5 @@
 from distutils.core import setup, Command
+from distutils.filelist import findall
 
 import os
 import re
@@ -40,7 +41,7 @@ class BuildManual(Command):
         os.environ['sphinx_external_modules']  = self.modules
         
     def run(self):
-        os.system("sphinx-build -b html manual manual/build")
+        os.system("sphinx-build -b html manual build/manual")
     
 
 
@@ -53,6 +54,7 @@ setup(
     scripts = ['oncilla-sim-wizard'],
     cmdclass = {
         'build_manual' : BuildManual
-        }
+        },
+    data_files=[('share/doc/oncilla-sim/manual',findall('build/manual/'))]
 )
 
