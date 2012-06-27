@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # Oncilla Simulation Wizard
 #
 import os
@@ -89,5 +87,3 @@ def main():
     else:
         parser.error("Unknown argument. Use either 'create' or 'update'.")
 
-if __name__ == '__main__':
-    main()
