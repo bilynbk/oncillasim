@@ -5,7 +5,7 @@
 
 |project| is the central project for the Oncilla Quadruped Simulation, developed
 in the `AMARSi`_ project.
-|project| contains a project :doc:`wizard`, that helps you set up new simulation
+|project| contains a :ref:`Project Wizard <wizard>`, that helps you set up new simulation
 projects and experiments.
 
 Contents:
