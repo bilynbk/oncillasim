@@ -27,15 +27,15 @@ class Wizard:
         
         self.getWebotsHome()
         
-        self.project = WebotsProject(self.proj_path)
-        self.template = WebotsTemplate(self.tmpl_path)
+        self.project = WebotsProject(self.proj_path, verbose=verbose)
+        self.template = WebotsTemplate(self.tmpl_path, verbose=verbose, online=online)
         
     def createProject(self):
         if not self.project.isEmpty():
             if self.project.isProjectFolder():
-                exit('Error: Given path is not empty. Try updating instead.')
+                exit('Error: Destination path seems to already contain a project, try updating.')
             else:
-                exit('Error: Given path is not empty. Try another folder.')
+                exit('Error: Destination path is not empty, try another folder.')
         else:
             self.template.prepare()
             self.project.create(self.template)
@@ -60,10 +60,11 @@ class Wizard:
                 os.environ['WEBOTS_HOME'] = self.wbts_path
         else:
             self.wbts_path = os.environ['WEBOTS_HOME']
-        print 'Found webots at', self.wbts_path
+        if self.verbose:
+            print 'Found webots at', self.wbts_path
          
 def main():
-    usage = "Usage: %prog [options] (create_project / update_project) path"
+    usage = "Usage: %prog [options] (create / update) path"
     parser = ArgumentParser()
     parser.add_argument("-q", "--quiet",
                   action="store_false", dest="verbose", default=True,
@@ -75,7 +76,7 @@ def main():
                   dest="tmpl_path", default='/tmp/onc/tmpl',
                   help="specify ")
     parser.add_argument("command", help="command, either 'create' or 'update'")
-    parser.add_argument("path", help="path / destination of the project")
+    parser.add_argument("path", help="destination / path of the project")
     args = parser.parse_args()
     
     wizard = Wizard(args.path, verbose=args.verbose, online=args.online,
@@ -86,7 +87,7 @@ def main():
     elif args.command == "update":
         wizard.updateProject()
     else:
-        parser.error("Unknown argument. Use either 'create_project' or 'update_project'.")
+        parser.error("Unknown argument. Use either 'create' or 'update'.")
 
 if __name__ == '__main__':
     main()

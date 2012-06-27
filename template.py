@@ -9,6 +9,7 @@ from git import *
 
 class WebotsTemplate:
     verbose = True
+    online = True
     tmpl_path = None
     ow_path = None
     onc_path = None
@@ -19,8 +20,9 @@ class WebotsTemplate:
     sync_overwrite = False
     foo = 0
     
-    def __init__(self, path, verbosity=True):
-        self.verbose = verbosity
+    def __init__(self, path, verbose=True, online=True):
+        self.verbose = verbose
+        self.online = online
         self.tmpl_path = path
         
         self.ow_path = os.path.join(path, 'liboncilla-webots')
@@ -35,12 +37,15 @@ class WebotsTemplate:
             if self.isTemplateFolder():
                 if self.verbose:
                     print 'Template is already existing. Looking for updates.'
-                self.update()
+                if self.online:
+                    self.update()
             else:
                 exit('''The template folder seems to contain other content. Try choosing a different template folder.''')
         else:
             if self.verbose:
                 print 'Template folder is not existing yet. Creating.'
+            if not self.online:
+                exit('Error: I need to fetch the project template, but I am in offline mode.')
             self.create()
         
     def isEmpty(self):
@@ -79,41 +84,45 @@ class WebotsTemplate:
         g.execute(['git', 'pull', 'origin'])
         
     def create(self):
-        print 'Creating project template'
+        if self.verbose:
+            print 'Creating project template'
         os.makedirs(self.tmpl_path)
         
         # Make a blank checkout of liboncilla-webots
-        print '* Cloning project template from liboncilla-webots ...'
+        if self.verbose:
+            print '* Cloning project template from liboncilla-webots ...'
         #wrepo = Repo.init() >3.2
         if not os.path.exists(self.ow_path):
             os.makedirs(self.ow_path)
         g = Git(self.ow_path)
-        remote = "https://anordman@redmine.amarsi-project.eu/git/liboncilla-webots.git"
+        remote = "https://redmine.amarsi-project.eu/git/liboncilla-webots.git"
         g.execute(['git', 'clone', remote, self.ow_path])
         #wrepo.clone_from("https://anordman@redmine.amarsi-project.eu/git/liboncilla-webots.git",
         #                self.ow_path) >3.2
         
         # Make a blank checkout of liboncilla for example 1
-        print '* Cloning examples from liboncilla ...'
+        if self.verbose:
+            print '* Cloning examples from liboncilla ...'
         #orepo = Repo.init() >3.2
         #orepo.clone_from("https://anordman@redmine.amarsi-project.eu/git/quaddrivers.git",
         #                self.onc_path, None, b="dev") >3.2
         if not os.path.exists(self.onc_path):
             os.makedirs(self.onc_path)
         g = Git(self.onc_path)
-        remote = "https://anordman@redmine.amarsi-project.eu/git/quaddrivers.git"
+        remote = "https://redmine.amarsi-project.eu/git/quaddrivers.git"
         g.execute(['git', 'clone', remote, self.onc_path])
 
         
         # Make a blank checkout of cca-oncilla for examples 2-4
-        print '* Cloning examples from cca-oncilla ...'
+        if self.verbose:
+            print '* Cloning examples from cca-oncilla ...'
         #crepo = Repo.init() >3.2
         #crepo.clone_from("https://anordman@redmine.amarsi-project.eu/git/oncilla-cca.git",
         #                self.cca_path) >3.2
         if not os.path.exists(self.cca_path):
             os.makedirs(self.cca_path)
         g = Git(self.cca_path)
-        remote = "https://anordman@redmine.amarsi-project.eu/git/oncilla-cca.git"
+        remote = "https://redmine.amarsi-project.eu/git/oncilla-cca.git"
         g.execute(['git', 'clone', remote, self.cca_path])
         
     def isTemplateFolder(self):

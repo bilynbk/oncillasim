@@ -15,8 +15,8 @@ class WebotsProject:
     rciexamples = None
     ccaexamples = None
     
-    def __init__(self, path, verbosity=True):
-        self.verbose = verbosity
+    def __init__(self, path, verbose=True):
+        self.verbose = verbose
         self.proj_path = path
         self.ctrl_path = os.path.join(path, 'controllers')
         self.worlds_path = os.path.join(path, 'worlds')
@@ -94,7 +94,8 @@ class WebotsProject:
             print 'Compiling Examples'
             
         for example in (self.rciexamples + self.ccaexamples):
-            print '* Compiling example', example
+            if self.verbose:
+                print '* Compiling example', example
             os.system('make --directory ' + os.path.join(self.ctrl_path, example))
             # Check, if controller was built
             if not os.path.exists(os.path.join(self.ctrl_path, example, example)):
