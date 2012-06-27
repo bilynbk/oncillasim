@@ -6,6 +6,7 @@ setup(
     version='0.1dev',
     packages=['oncilla_sim'],
     license='Lesser General Public License version 3',
-    long_description=open('README.rst').read()
+    long_description=open('README.rst').read(),
+    scripts = ['oncilla-sim-wizard']
 )
 
