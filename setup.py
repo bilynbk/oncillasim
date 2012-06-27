@@ -46,7 +46,7 @@ class BuildManual(Command):
 
 setup(
     name='oncilla-sim-project-wizard',
-    version='0.1dev',
+    version='0.1.0rc1',
     packages=['oncilla_sim'],
     license='Lesser General Public License version 3',
     long_description=open('README.rst').read(),
