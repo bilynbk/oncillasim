@@ -23,7 +23,7 @@ class WebotsTemplate:
     ow_remote = "https://redmine.amarsi-project.eu/git/liboncilla-webots.git"
     ow_revision = "ce101b67025e7f6b21a0baa44edec6f044436eb5"
     onc_remote = "https://redmine.amarsi-project.eu/git/quaddrivers"
-    onc_revision = "35e99b20415084027da110d679907dd420f1b614"
+    onc_revision = "d74945bbc627378d82510193a3129979a8304c9d"
     cca_remote = "https://redmine.amarsi-project.eu/git/oncilla-cca.git"
     cca_revision = "2305f4d27ffb96dbc0d50dbdd815f2bf557aa00f"
 
