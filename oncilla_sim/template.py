@@ -25,7 +25,7 @@ class WebotsTemplate:
     onc_remote = "https://redmine.amarsi-project.eu/git/quaddrivers"
     onc_revision = "35e99b20415084027da110d679907dd420f1b614"
     cca_remote = "https://redmine.amarsi-project.eu/git/oncilla-cca.git"
-    cca_revision = "5b215872dd0079524dcabd663b749e9b9184cf87"
+    cca_revision = "2305f4d27ffb96dbc0d50dbdd815f2bf557aa00f"
 
     def __init__(self, path, verbose=True, online=True):
         self.verbose = verbose
@@ -169,42 +169,25 @@ class WebotsTemplate:
                 
         return examples
 
-    def updateRCIExample(self, target):
-        examples = ['Example1']
-        for folder in examples:
-            if not os.path.exists(target + '/controllers/' + folder):
-                os.makedirs(target + '/controllers/' + folder)
-
-        # Example source
-        shutil.copy(self.onc_path + "/examples/SimpleSineMovement.cpp",
-                self.tmp_path + '/controllers/' + examples[0] + '/' + examples[0] + '.cpp')
-        
-        # Makefile
-        shutil.copy(self.data_path + '/controllers/with-rci/Makefile',
-                self.tmp_path + '/controllers/' + examples[0] + '/')
-        
-        # World files - we have to replace the controller in the world files
-        for controller in examples:
-            fn = open(os.path.join(target + "/worlds", controller + ".wbt"), "w+")
-            fn.write(self.get_world_file_for(controller))
-            if self.verbose:
-                print '* Created RCI Example:', target + "/worlds" + '/' + controller + ".wbt"
-                
-        return examples
-
     def createCCAExamples(self, target):
-        examples = ['Example2']
+        examples = ['Example2', 'Example3']
         for folder in examples:
             if not os.path.exists(target + '/controllers/' + folder):
                 os.makedirs(target + '/controllers/' + folder)
 
-        # Example source
-        shutil.copy(self.cca_path + "/cca-oncilla/examples/SimpleSineMovement-CCALocal.cpp",
+        # Local Example source
+        shutil.copy(self.cca_path + "/cca-oncilla/examples/Local-SimpleSineMovement.cpp",
                 target + '/controllers/' + examples[0] + '/' + examples[0] + '.cpp')
-        
         # Makefile
         shutil.copy(self.data_path + '/controllers/with-cca/Makefile',
                         target + '/controllers/' + examples[0] + '/')
+        
+        # Remote Example sources
+        shutil.copy(self.cca_path + "/cca-oncilla/examples/Remote-Oncilla.cpp",
+                target + '/controllers/' + examples[1] + '/' + examples[1] + '.cpp')
+        # Makefile
+        shutil.copy(self.data_path + '/controllers/with-cca/Makefile',
+                        target + '/controllers/' + examples[1] + '/')
         
         # World files - we have to replace the controller in the world files
         for controller in examples:
