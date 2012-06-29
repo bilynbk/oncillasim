@@ -4,6 +4,7 @@ import sys
 import string
 import shutil
 import filecmp
+import ConfigParser
 
 from git import *
 
@@ -18,14 +19,6 @@ class WebotsTemplate:
     tmp_path = None
     sync_ignore = False
     sync_overwrite = False
-    
-    # This should go into a config file eventually
-    ow_remote = "https://redmine.amarsi-project.eu/git/liboncilla-webots.git"
-    ow_revision = "ce101b67025e7f6b21a0baa44edec6f044436eb5"
-    onc_remote = "https://redmine.amarsi-project.eu/git/quaddrivers"
-    onc_revision = "d74945bbc627378d82510193a3129979a8304c9d"
-    cca_remote = "https://redmine.amarsi-project.eu/git/oncilla-cca.git"
-    cca_revision = "2305f4d27ffb96dbc0d50dbdd815f2bf557aa00f"
 
     def __init__(self, path, verbose=True, online=True):
         self.verbose = verbose
@@ -36,6 +29,15 @@ class WebotsTemplate:
         self.onc_path = os.path.join(path, 'liboncilla')
         self.cca_path = os.path.join(path, 'cca-oncilla')
         self.data_path = os.path.join(self.ow_path, 'webots-data')
+
+        config = ConfigParser.RawConfigParser()
+        config.read('wizard.cfg')
+        self.onc_remote = config.get('liboncilla', 'remote')
+        self.onc_revision = config.get('liboncilla', 'revision')
+        self.ow_remote = config.get('liboncilla-webots', 'remote')
+        self.ow_revision = config.get('liboncilla-webots', 'revision')
+        self.cca_remote = config.get('libcca-oncilla', 'remote')
+        self.cca_revision = config.get('libcca-oncilla', 'revision')
 
     def prepare(self):
         if not self.isEmpty():
@@ -68,28 +70,22 @@ class WebotsTemplate:
         # Fetch updates for liboncilla-webots
         if self.verbose:
             print '* Updating skeleton from liboncilla-webots ...'
-        # wrepo = Repo.init(path=self.ow_path) >3.2
-        # wrepo.git.remote("update", "origin") >3.2
         g = Git(self.ow_path)
         g.execute(['git', 'checkout', 'master'])
         g.execute(['git', 'pull', 'origin'])
         g.execute(['git', 'checkout', self.ow_revision])
-
+        
         # Fetch updates for liboncilla for example 1
         if self.verbose:
             print '* Updating examples from liboncilla ...'
-        #orepo = Repo.init(path=self.onc_path)
-        #orepo.git.remote("update", "origin")
         g = Git(self.onc_path)
         g.execute(['git', 'checkout', 'master'])
         g.execute(['git', 'pull', 'origin'])
         g.execute(['git', 'checkout', self.onc_revision])
-
+        
         # Fetch updates for cca-oncilla for examples 2-4
         if self.verbose:
             print '* Updating examples from cca-oncilla ...'
-        #crepo = Repo.init(path=self.cca_path)
-        #crepo.git.remote("update", "origin")
         g = Git(self.cca_path)
         g.execute(['git', 'checkout', 'master'])
         g.execute(['git', 'pull', 'origin'])
@@ -103,6 +99,7 @@ class WebotsTemplate:
         # Make a blank checkout of liboncilla-webots
         if self.verbose:
             print '* Cloning project template from liboncilla-webots ...'
+
         if not os.path.exists(self.ow_path):
             os.makedirs(self.ow_path)
         g = Git(self.ow_path)
@@ -121,12 +118,15 @@ class WebotsTemplate:
         # Make a blank checkout of cca-oncilla for examples 2-4
         if self.verbose:
             print '* Cloning examples from cca-oncilla ...'
+        #crepo = Repo.init() >3.2
+        #crepo.clone_from("https://anordman@redmine.amarsi-project.eu/git/oncilla-cca.git",
+        #                self.cca_path) >3.2
         if not os.path.exists(self.cca_path):
             os.makedirs(self.cca_path)
         g = Git(self.cca_path)
-        g.execute(['git', 'clone', self.cca_remote, self.cca_path])
-        g.execute(['git', 'checkout', self.cca_revision])
-
+        remote = "https://redmine.amarsi-project.eu/git/oncilla-cca.git"
+        g.execute(['git', 'clone', remote, self.cca_path])
+        
     def isTemplateFolder(self):
         for path in [self.ow_path, self.onc_path, self.cca_path, self.data_path]:
             if not os.path.exists(path):
@@ -169,6 +169,7 @@ class WebotsTemplate:
                 
         return examples
 
+
     def createCCAExamples(self, target):
         examples = ['Example2', 'Example3']
         for folder in examples:
@@ -205,6 +206,7 @@ class WebotsTemplate:
         return string.replace(world_orig, old, controller)
     
     def syncDir(self, syncdir, src, dest):
+        
         # If folder doesn't exist, create it 
         for root, dirs, files in os.walk(syncdir, topdown=False):
             for name in dirs:
@@ -213,7 +215,7 @@ class WebotsTemplate:
                     os.makedirs(required_folder)
                     if self.verbose:
                         print '** Created', required_folder
-
+        
         # If file doesn exist, copy it
         # If file is the same, ignore it
         # If file is different, ask for solution
@@ -230,7 +232,7 @@ class WebotsTemplate:
                 destfile = required_file
                 
                 self.syncFile(srcfile, destfile)
-                
+
     def syncFile(self, srcfile, destfile):
         if not os.path.exists(destfile):
             shutil.copyfile(srcfile, destfile)

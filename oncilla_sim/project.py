@@ -89,10 +89,10 @@ class WebotsProject:
     """
     Compiling all examples 
     """
-    def compileExamples(self):  
+    def compileExamples(self):
         if self.verbose:
             print 'Compiling Examples'
-            
+        
         for example in (self.rciexamples + self.ccaexamples):
             if self.verbose:
                 print '* Compiling example', example
@@ -100,3 +100,4 @@ class WebotsProject:
             # Check, if controller was built
             if not os.path.exists(os.path.join(self.ctrl_path, example, example)):
                 exit('Error: Compilation of ' + example + ' failed.')
+        print 'Examples successfully compiled. Open example world files with webots.'
