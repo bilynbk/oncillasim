@@ -13,4 +13,5 @@ _build
 conf.py
 .project
 .pydevproject
+.project
 
