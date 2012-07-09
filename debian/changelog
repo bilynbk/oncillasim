@@ -1,3 +1,10 @@
+oncilla-sim (0.1.0rc4-1) precise; urgency=low
+
+  * New upstream version 0.1.0rc4
+  * Fixed the dependency to use
+
+ -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Mon, 09 Jul 2012 15:39:09 +0200
+
 oncilla-sim (0.1.0rc3-2) precise; urgency=low
 
   * Switched to dh_python2

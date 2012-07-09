@@ -4,15 +4,14 @@ Priority: extra
 Maintainer: Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>
 Build-Depends: debhelper (>= 8.0.0), python, python-sphinx,
  liboncilla-doc
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 Homepage: http://redmine.amarsi-project.eu/projects/oncillasim
 Vcs-Git: http://redmine.amarsi-project.eu/git/oncillasim.git
 
 Package: oncilla-sim
 Architecture: all
-Depends: ${python:Depends}, python-git, liboncilla-webots-dev,
- liboncilla-dev, webots,
- libcca-oncilla0.1-dev
+Depends: ${python:Depends}, python-git, liboncilla-webots-dev (>=
+ 0.1.0), liboncilla-dev (>= 0.2.0), webots , libcca-oncilla0.1-dev
 Suggests: oncilla-sim-doc
 Description: Wizard that easily install Oncilla Robot simulator
  Oncilla is a robot from AMARSi project, this package install all what
