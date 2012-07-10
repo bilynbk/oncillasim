@@ -1,3 +1,10 @@
+oncilla-sim (0.1.0rc5-1) precise; urgency=low
+
+  * New upstream version 0.1.0rc5
+  * Added new files to install under usr/share/oncilla-sim
+
+ -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Tue, 10 Jul 2012 16:11:58 +0200
+
 oncilla-sim (0.1.0rc4-1) precise; urgency=low
 
   * New upstream version 0.1.0rc4
