@@ -31,7 +31,9 @@ class WebotsTemplate:
         self.data_path = os.path.join(self.ow_path, 'webots-data')
 
         config = ConfigParser.RawConfigParser()
-        config.read('wizard.cfg')
+        config.read(['wizard.cfg',
+                     '/usr/local/share/oncilla-sim/wizard.cfg',
+                     '/usr/share/oncilla-sim/wizard.cfg'])
         self.onc_remote = config.get('liboncilla', 'remote')
         self.onc_revision = config.get('liboncilla', 'revision')
         self.ow_remote = config.get('liboncilla-webots', 'remote')
