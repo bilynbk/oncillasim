@@ -60,6 +60,7 @@ setup(
     cmdclass = {
         'build_manual' : BuildManual
         },
-    data_files=[('share/doc/oncilla-sim/manual',findall('build/manual/'))]
+    data_files=[('share/doc/oncilla-sim/manual',findall('build/manual/'))
+                ('share/oncilla-sim/wizard.cfg',wizard.cfg)]
 )
 
