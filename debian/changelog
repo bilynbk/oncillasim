@@ -1,37 +1,5 @@
-oncilla-sim (0.1.0rc5-1) precise; urgency=low
-
-  * New upstream version 0.1.0rc5
-  * Added new files to install under usr/share/oncilla-sim
-
- -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Tue, 10 Jul 2012 16:11:58 +0200
-
-oncilla-sim (0.1.0rc4-1) precise; urgency=low
-
-  * New upstream version 0.1.0rc4
-  * Fixed the dependency to use
-
- -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Mon, 09 Jul 2012 15:39:09 +0200
-
-oncilla-sim (0.1.0rc3-2) precise; urgency=low
-
-  * Switched to dh_python2
-
- -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Fri, 29 Jun 2012 15:53:42 +0200
-
-oncilla-sim (0.1.0rc3-1) precise; urgency=low
-
-  * New upstream version to 0.1.0rc3
-
- -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Fri, 29 Jun 2012 15:45:28 +0200
-
-oncilla-sim (0.1.0rc2-1) precise; urgency=low
-
-  * New upstream version 0.1.0rc2
-
- -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Thu, 28 Jun 2012 17:02:17 +0200
-
-oncilla-sim (0.1.0rc1-1) precise; urgency=low
+oncilla-sim (0.1.0-1) quantal; urgency=low
 
   * Initial release (Closes: #293)
 
- -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Wed, 27 Jun 2012 16:33:09 +0200
+ -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Thu, 12 Jul 2012 14:41:07 +0200
