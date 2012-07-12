@@ -52,7 +52,7 @@ except OSError, e:
 
 setup(
     name='oncilla-sim-project-wizard',
-    version='0.1.0rc5',
+    version='0.1.0',
     packages=['oncilla_sim'],
     license='Lesser General Public License version 3',
     long_description=open('README.rst').read(),
