@@ -1,3 +1,16 @@
+oncilla-sim (0.1.1-1) precise; urgency=low
+
+  [ Arne Nordmann ]
+  * Documentation on Example 4
+  * Updated revision for cca-oncilla examples
+  * Added command-line option to force recompilation of all examples (-c)
+
+  [ Alexandre Tuleu ]
+  * Redocumented the installation procedure
+  * New upstream version 0.1.1
+
+ -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Tue, 31 Jul 2012 18:23:12 +0200
+
 oncilla-sim (0.1.0-1) precise; urgency=low
 
   * Initial release (Closes: #293)
