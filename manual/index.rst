@@ -1,5 +1,9 @@
 .. _oncilla-sim:
 
+===========
+ |project|
+===========
+
 |project| Manual (for version |version|)
 ========================================
 
