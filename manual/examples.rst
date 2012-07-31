@@ -47,7 +47,7 @@ You should see the robot performing a simple walking movement, which is not a
 necessarily meaningful walking gate. *;)*
 
 For more information on the example and how to change and extend it, see
-:ref:`liboncilla: Simple Sine Movement <liboncilla:example>`.
+:ref:`Simple Sine Movement <liboncilla:example>`.
 
 Example 2: Simple Sine Movement Component
 =========================================
@@ -57,7 +57,7 @@ The second example will do exactly the same as Example 1, but is written as a
 Architecture.
 
 For more information on the example and how to change and extend it, see
-:ref:`cca-oncilla: Simple Sine Movement Component <ccaoncilla:ccaexample>`.
+:ref:`Simple Sine Movement Component <ccaoncilla:ccaexample>`.
 
 Example 3: External Components / Streaming 
 ==========================================
@@ -79,4 +79,4 @@ middleware :ref:`RSB <rsb>` (Robotics Service Bus) by using :ref:`RSBag Tools
 <rsbag>`.
 
 For more information on the example and how to change and extend it, see
-:ref:`cca-oncilla: Replaying Simple Sine Movement <ccaoncilla:rsbagexample>`.
+:ref:`Replaying Simple Sine Movement <ccaoncilla:rsbagexample>`.

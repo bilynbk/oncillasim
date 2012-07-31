@@ -9,6 +9,8 @@ in the `AMARSi`_ project.
 simulation projects and experiments, and installs :ref:`examples` for the usage
 of the different API layers.
 
+.. image:: images/oncilla-sim.png
+
 Contents:
 
 .. toctree::
