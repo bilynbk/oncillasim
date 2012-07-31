@@ -61,23 +61,21 @@ For more information on the example and how to change and extend it, see
 Example 3: External Components / Streaming 
 ==========================================
 
-The third example will do exactly the same as Example 1 and 2, but is written as
-an external Python Script, that communicates with the Simulator over the
-middleware :ref:`RSB <rsb>` (Robotics Service Bus).
-
-...
+The third example will do exactly the same as Example 1 and 2, but the
+Oncilla Simulation is providing remote access over API Level 2. To show the
+openness of the interface, the same movement as above is implemented as a
+Python Script, that communicates with the Simulator over the middleware RSB
+(Robotics Service Bus).
 
 For more information on the example and how to change and extend it, see
-:ref:`cca-oncilla: Python Simple Sine Movement <ccaoncilla:pythonexample>`.
+:ref:`Python Simple Sine Movement <ccaoncilla:pythonexample>`.
 
 Example 4: Recording and Replaying Movements 
 ============================================
 
-The fourth example will replay a previously recorded movement over the
+The fourth example replays a previously recorded movement over the
 middleware :ref:`RSB <rsb>` (Robotics Service Bus) by using :ref:`RSBag Tools
 <rsbag>`.
-
-...
 
 For more information on the example and how to change and extend it, see
 :ref:`cca-oncilla: Replaying Simple Sine Movement <ccaoncilla:rsbagexample>`.

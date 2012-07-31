@@ -17,15 +17,17 @@ class Wizard:
     template = None
     
     def __init__(self, path, verbose=True, online=True,
-                tmpl_path='/tmp/oncillawizard/template'):
+                tmpl_path='/tmp/oncillawizard/template',
+                clean=False):
         self.verbose = verbose
         self.online = online
         self.proj_path = path
         self.tmpl_path = tmpl_path
+        self.clean = clean
         
         self.getWebotsHome()
         
-        self.project = WebotsProject(self.proj_path, verbose=verbose)
+        self.project = WebotsProject(self.proj_path, verbose=verbose, clean=clean)
         self.template = WebotsTemplate(self.tmpl_path, verbose=verbose, online=online)
         
     def createProject(self):
@@ -70,15 +72,18 @@ def main():
     parser.add_argument("-o", "--offline-mode",
                   action="store_false", dest="online", default=True,
                   help="just copy and compile, don`t update from online repositories")
+    parser.add_argument("-c", "--clean",
+                  action="store_true", dest="clean", default=False,
+                  help="force a clean (re)compilation of all examples")
     parser.add_argument("-t", "--template_path",
                   dest="tmpl_path", default='/tmp/onc/tmpl',
-                  help="specify ")
+                  help="specify folder to use for temporary files during project setup")
     parser.add_argument("command", help="command, either 'create' or 'update'")
     parser.add_argument("path", help="destination / path of the project")
     args = parser.parse_args()
     
     wizard = Wizard(args.path, verbose=args.verbose, online=args.online,
-                tmpl_path=args.tmpl_path)
+                tmpl_path=args.tmpl_path, clean=args.clean)
     
     if args.command == "create":
         wizard.createProject()
