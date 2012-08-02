@@ -1,0 +1,92 @@
+{% extends "!page.html" %}
+
+{% block body %}
+
+  {{ super() }}
+
+  {% if pagename == 'index' %}
+
+    <h2>Contents</h2>
+
+    <table class="contentstable" align="center">
+      <tr>
+        <td width="50%">
+          <p class="icon"><img src="{{ '_static/install.svg' }}"/></p>
+          <p class="biglink">
+            <a href="{{ pathto('preparation')}}#install">Installation</a>
+            <br/>
+            <span class="linkdescr">Install {{project}} on your platform</span>
+          </p>
+        </td>
+        <td width="50%">
+          <p class="icon"><img src="{{ '_static/whatis.svg' }}"/></p>
+          <p class="biglink">
+            <a href="{{ pathto('wizard')}}">Project Wizard</a>
+            <br/>
+            <span class="linkdescr">Learn how to use the Project Wizard to set up you environment</span>
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td width="50%">
+          <p class="icon"><img src="{{ '_static/tutorial.svg' }}"/></p>
+          <p class="biglink">
+            <a href="{{ pathto('examples')}}">Examples</a>
+            <br/>
+            <span class="linkdescr">Learn how to use {{project}}</span>
+          </p>
+        </td>
+        <td width="50%">
+          <p class="icon"><img src="{{ '_static/tools.svg' }}"/></p>
+          <p class="biglink">
+            <a href="{{ pathto('dev') }}">Experimentation</a>
+            <br/>
+            <span class="linkdescr">Learn how to write own experiments</span>
+          </p>
+        </td>
+      </tr>
+    </table>
+
+    <p><strong>{{ _('Indices and tables:') }}</strong></p>
+    <table class="contentstable" align="center">
+      <tr>
+        <td width="50%">
+          <p class="icon"><img src="{{ '_static/search.svg' }}"/></p>
+          <p class="biglink">
+            <a href="{{ pathto('search') }}">{{ _('Search Page') }}</a>
+            <br>
+            <span class="linkdescr">{{ _('Search this documentation') }}</span>
+          </p>
+        </td>
+        <td width="50%">
+          <p class="icon"><img src="{{ '_static/index.svg' }}"/></p>
+          <p class="biglink">
+            <a href="{{ pathto('genindex') }}">{{ _('General Index') }}</a>
+            <br>
+            <span class="linkdescr">{{ _('All functions, classes, terms') }}</span>
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td width="50%">
+          <p class="icon"><img src="{{ '_static/glossary.svg' }}"/></p>
+          <p class="biglink">
+            <a href="{{ pathto('glossary') }}">{{ _('Glossary') }}</a>
+            <br>
+            <span class="linkdescr">{{ _('Terms and definitions') }}</span>
+          </p>
+        </td>
+      </tr>
+    </table>
+
+    <div class="admonition note">
+      <p>
+        The design of this page has been lifted from the documentation of
+        the <a href="https://www.openrobots.org/wiki/morse">MORSE</a>
+        project.
+      </p>
+    </div>
+
+  {% endif %}
+
+{% endblock %}
