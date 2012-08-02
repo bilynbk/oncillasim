@@ -1,0 +1,32 @@
+@import url("nature.css");
+
+div.related {
+    background-color: #0068b4;
+}
+
+div.related a {
+    color: #bcceed;
+}
+
+table.contentstable p.biglink a {
+    font-size: 1.3em
+}
+
+table.contentstable p.icon {
+    float: left;
+    margin-right: 8px;
+}
+
+table.contentstable p.icon img {
+    width: 48px;
+    height: 48px;
+}
+
+div.body h1, div.body h2, div.body h3, div.body h4, div.body h5, div.body h6 {
+    background-color: #bcceed;
+}
+
+a {
+    color: #0068b4;
+}
+
