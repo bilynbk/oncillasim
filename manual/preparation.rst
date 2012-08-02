@@ -17,7 +17,7 @@ There are currently two ways to install the |version| version of
 -----------------
 
 Debian packages for |ubuntu| are available from the `CoR-Lab package
-repository <http://packages.cor-lab.de/ubuntu/dists/>`_ , `Biorob
+repository <http://packages.cor-lab.de/>`_ , `Biorob
 repository <http://biorob2.epfl.ch/users/tuleu/ubuntu>`_ and
 `Cyberbotics repositiory <http://www.cyberbotics.com/debian>`_.
 
