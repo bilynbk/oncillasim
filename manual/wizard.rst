@@ -20,7 +20,7 @@ To learn about the basic usage and command line arguments, type:
 
 .. code-block:: sh
 
-   ./oncilla-sim-wizard -h
+   oncilla-sim-wizard -h
 
 Create Project
 --------------
@@ -31,14 +31,11 @@ up a new project by:
 
 .. code-block:: sh
 
-   ./oncilla-sim-wizard create /your/new/project/path
+   oncilla-sim-wizard create /your/new/project/path
 
 After that, you find a number of world files in the folder *worlds/*,
 corresponding controllers in the folder *controllers/* and some infrastructure.
 Start with the examples as described :ref:`here <examples>`.
-
-.. _`Webots`:
-    http://www.cyberbotics.com/overview
 
 Update Project
 --------------
@@ -51,7 +48,7 @@ without asking.
 
 .. code-block:: sh
 
-   ./oncilla-sim-wizard update /your/existing/project/path
+   oncilla-sim-wizard update /your/existing/project/path
 
 .. _`Webots`:
     http://www.cyberbotics.com/overview
