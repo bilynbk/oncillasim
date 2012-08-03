@@ -32,8 +32,6 @@ like this::
   wget -O - https://webdav.cor-lab.de/server_keys/packages.cor-lab.de_server_key.txt | sudo apt-key add -
   wget -O - http://www.cyberbotics.com/Cyberbotics.asc | sudo apt-key add -
 
-Then download and install :doc:`NemoMath <nemomath>`.
-
 Then you can install the packages needed for the simulator::
 
   sudo aptitude update

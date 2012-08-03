@@ -87,6 +87,15 @@ pygments_style = 'sphinx'
 
 # -- Options for HTML output ---------------------------------------------------
 
+html_context = {
+                'doc_cca': os.environ.get('cca', "/"),
+                'doc_rsb': os.environ.get('cca', "/"),
+                'doc_rsbag': os.environ.get('cca', "/"),
+                'doc_rst': os.environ.get('rst', "/"),
+                'doc_liboncilla': os.environ.get('liboncilla', "/"),
+                'doc_ccaoncilla': os.environ.get('ccaoncilla', "/"),
+                }
+
 html_theme = 'corlab'
 #html_theme_options = {}
 html_theme_path = ['.']
