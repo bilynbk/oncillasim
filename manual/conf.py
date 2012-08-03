@@ -89,8 +89,8 @@ pygments_style = 'sphinx'
 
 html_context = {
                 'doc_cca': os.environ.get('cca', "/"),
-                'doc_rsb': os.environ.get('cca', "/"),
-                'doc_rsbag': os.environ.get('cca', "/"),
+                'doc_rsb': os.environ.get('rsb', "/"),
+                'doc_rsbag': os.environ.get('rsbag', "/"),
                 'doc_rst': os.environ.get('rst', "/"),
                 'doc_liboncilla': os.environ.get('liboncilla', "/"),
                 'doc_ccaoncilla': os.environ.get('ccaoncilla', "/"),
