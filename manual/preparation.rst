@@ -32,12 +32,12 @@ like this::
   wget -O - https://webdav.cor-lab.de/server_keys/packages.cor-lab.de_server_key.txt | sudo apt-key add -
   wget -O - http://www.cyberbotics.com/Cyberbotics.asc | sudo apt-key add -
 
-Then install :doc:`NemoMath <nemomath>`.
+Then download and install :doc:`NemoMath <nemomath>`.
 
 Then you can install the packages needed for the simulator::
 
   sudo aptitude update
   sudo aptitude install oncilla-sim liboncilla-dev liboncilla-webots-dev webots
 
-Now you are ready to use :ref:`oncilla-sim-wizard <wizard>` utility to
+Now you are ready to use :ref:`Project Wizard <wizard>` utility to
 launch the simulator.
