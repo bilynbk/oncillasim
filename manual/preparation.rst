@@ -16,6 +16,8 @@ There are currently two ways to install the |version| version of
 |ubuntu| Packages
 -----------------
 
+.. warning:: Package are curently only released for **precise 12.04** (and not for lucid 10.04).
+
 Debian packages for |ubuntu| are available from the `CoR-Lab package
 repository <http://packages.cor-lab.de/>`_ , `Biorob
 repository <http://biorob2.epfl.ch/users/tuleu/ubuntu>`_ and
