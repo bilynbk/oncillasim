@@ -19,4 +19,7 @@ simulation projects and experiments, and installs :ref:`Examples <examples>` for
 of the different API layers.
 
 The Simulator is based on the `Webots <http://www.cyberbotics.com/overview>`_
-Simulator by Cyberbotics and requires a Webots ``PRO License``.  
+Simulator by Cyberbotics and requires a Webots ``PRO License``. If you don't
+have an appropriate license, you can also
+`register at Cyberbotics <http://www.cyberbotics.com/my_account/register>`_ to
+obtain free 30 day trial version of the Webots ``PRO License``.
