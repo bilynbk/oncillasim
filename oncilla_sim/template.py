@@ -35,11 +35,11 @@ class WebotsTemplate:
                      '/usr/local/share/oncilla-sim/wizard.cfg',
                      '/usr/share/oncilla-sim/wizard.cfg'])
         self.onc_remote = config.get('liboncilla', 'remote')
-        self.onc_revision = config.get('liboncilla', 'revision')
+        self.onc_tag = config.get('liboncilla', 'tag')
         self.ow_remote = config.get('liboncilla-webots', 'remote')
         self.ow_revision = config.get('liboncilla-webots', 'revision')
         self.cca_remote = config.get('libcca-oncilla', 'remote')
-        self.cca_revision = config.get('libcca-oncilla', 'revision')
+        self.cca_tag = config.get('libcca-oncilla', 'tag')
 
     def prepare(self):
         if not self.isEmpty():
@@ -73,25 +73,22 @@ class WebotsTemplate:
         if self.verbose:
             print '* Updating skeleton from liboncilla-webots ...'
         g = Git(self.ow_path)
-        g.execute(['git', 'checkout', 'master'])
-        g.execute(['git', 'pull', 'origin'])
+        g.execute(['git', 'fetch', '--all'])
         g.execute(['git', 'checkout', self.ow_revision])
         
         # Fetch updates for liboncilla for example 1
         if self.verbose:
             print '* Updating examples from liboncilla ...'
         g = Git(self.onc_path)
-        g.execute(['git', 'checkout', 'master'])
-        g.execute(['git', 'pull', 'origin'])
-        g.execute(['git', 'checkout', self.onc_revision])
+        g.execute(['git', 'fetch', '--all'])
+        g.checkout(self.onc_tag)
         
         # Fetch updates for cca-oncilla for examples 2-4
         if self.verbose:
             print '* Updating examples from cca-oncilla ...'
         g = Git(self.cca_path)
-        g.execute(['git', 'checkout', 'master'])
-        g.execute(['git', 'pull', 'origin'])
-        g.execute(['git', 'checkout', self.cca_revision])
+        g.execute(['git', 'fetch', '--all'])
+        g.checkout(self.cca_tag)
 
     def create(self):
         if self.verbose:
