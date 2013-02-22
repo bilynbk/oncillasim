@@ -108,7 +108,7 @@ class WebotsTemplate:
         g.execute(['git', 'clone', self.ow_remote, self.ow_path])
         g.execute(['git', 'fetch', '--all'])
         g.execute(['git', 'fetch', '--tags'])
-        g.checkout(self.onc_tag)
+        g.checkout(self.ow_tag)
         
         # Make a blank checkout of liboncilla for example 1
         if self.verbose:
@@ -130,7 +130,7 @@ class WebotsTemplate:
         g.execute(['git', 'clone', self.cca_remote, self.cca_path])
         g.execute(['git', 'fetch', '--all'])
         g.execute(['git', 'fetch', '--tags'])
-        g.checkout(self.onc_tag)
+        g.checkout(self.cca_tag)
         
     def isTemplateFolder(self):
         for path in [self.ow_path, self.onc_path, self.cca_path, self.data_path]:
