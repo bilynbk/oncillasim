@@ -11,7 +11,7 @@ Vcs-Git: http://redmine.amarsi-project.eu/git/oncillasim.git
 Package: oncilla-sim
 Architecture: all
 Depends: ${python:Depends}, python-git, liboncilla-webots-dev (>=
- 0.1.0), liboncilla-dev (>= 0.2.0), webots , libcca-oncilla0.1-dev,
+ 0.2.0~rc3), webots , libcca-oncilla0.1-dev (>=0.1.5),
  build-essential
 Suggests: oncilla-sim-doc
 Description: Wizard that easily install Oncilla Robot simulator
