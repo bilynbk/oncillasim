@@ -1,3 +1,9 @@
+oncilla-sim (0.2.0~rc2-1) precise; urgency=low
+
+  * New upstream version 0.2.0~rc2
+
+ -- Alexandre Tuleu <alexandre.tuleu.2005@polytechnique.org>  Wed, 13 Mar 2013 18:47:17 +0100
+
 oncilla-sim (0.2.0~rc1-1) precise; urgency=low
 
   * New upstream version 0.2.0~rc1
