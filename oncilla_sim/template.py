@@ -71,7 +71,7 @@ class WebotsTemplate:
         
         # Fetch updates for liboncilla-webots
         if self.verbose:
-            print '* Updating skeleton from liboncilla-webots ...'
+            print '* Updating skeleton from liboncilla-webots tag `'+self.ow_tag+'` ...'
         g = Git(self.ow_path)
         g.execute(['git', 'fetch', '--all'])
         g.execute(['git', 'fetch', '--tags'])
@@ -79,7 +79,7 @@ class WebotsTemplate:
         
         # Fetch updates for liboncilla for example 1
         if self.verbose:
-            print '* Updating examples from liboncilla ...'
+            print '* Updating examples from liboncilla tag `'+self.onc_tag+'` ...'
         g = Git(self.onc_path)
         g.execute(['git', 'fetch', '--all'])
         g.execute(['git', 'fetch', '--tags'])
@@ -87,7 +87,7 @@ class WebotsTemplate:
         
         # Fetch updates for cca-oncilla for examples 2-4
         if self.verbose:
-            print '* Updating examples from cca-oncilla ...'
+            print '* Updating examples from cca-oncilla tag `'+self.cca_tag+'` ...'
         g = Git(self.cca_path)
         g.execute(['git', 'fetch', '--all'])
         g.execute(['git', 'fetch', '--tags'])
@@ -100,7 +100,7 @@ class WebotsTemplate:
         
         # Make a blank checkout of liboncilla-webots
         if self.verbose:
-            print '* Cloning project template from liboncilla-webots ...'
+            print '* Cloning project template from liboncilla-webots tag `'+self.ow_tag+'` ...'
 
         if not os.path.exists(self.ow_path):
             os.makedirs(self.ow_path)
@@ -112,7 +112,7 @@ class WebotsTemplate:
         
         # Make a blank checkout of liboncilla for example 1
         if self.verbose:
-            print '* Cloning examples from liboncilla ...'
+            print '* Cloning examples from liboncilla tag `'+self.onc_tag+'` ...'
         if not os.path.exists(self.onc_path):
             os.makedirs(self.onc_path)
         g = Git(self.onc_path)
@@ -123,7 +123,7 @@ class WebotsTemplate:
         
         # Make a blank checkout of cca-oncilla for examples 2-4
         if self.verbose:
-            print '* Cloning examples from cca-oncilla ...'
+            print '* Cloning examples from cca-oncilla tag `'+self.cca_tag+'` ...'
         if not os.path.exists(self.cca_path):
             os.makedirs(self.cca_path)
         g = Git(self.cca_path)
