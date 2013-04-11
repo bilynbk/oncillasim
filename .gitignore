@@ -7,7 +7,6 @@ coverage
 .settings/
 CMakeCache*
 CMakeFiles*
-Makefile*
 cmake_*
 _build
 conf.py
