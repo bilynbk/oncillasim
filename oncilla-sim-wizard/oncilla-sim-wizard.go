@@ -1,9 +1,11 @@
 package main
 
 import (
-	"fmt"
+	"os"
 )
 
 func main() {
-	fmt.Println("Hello World !")
+	if _,err := parser.Parse(); err != nil {
+		os.Exit(1)
+	}
 }
