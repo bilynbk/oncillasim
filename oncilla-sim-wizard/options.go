@@ -17,16 +17,22 @@ type Options struct {
 	ConfigFilename string
 }
 
-type GenerateConfig struct {
+type GenerateConfigExecuter struct {
 	Path string `short:"p" long:"path" description:"Path for generating the ini file"`
 }
 
-func (g *GenerateConfig) Execute(args []string) error {
+func (g *GenerateConfigExecuter) Execute(args []string) error {
 	if len(args) > 0 {
 		return fmt.Errorf("generate-config do not take arguments")
 	}
 
-	filename := filepath.Join(options.Base,options.ConfigFilename)
+	var filename string
+	if len(g.Path) > 0 {
+		filename = g.Path
+	} else {
+		filename = filepath.Join(options.Base,options.ConfigFilename)
+	}
+	
 	if err := parser.WriteIniToFile(filename, flags.IniIncludeComments | flags.IniIncludeDefaults); err != nil {
 		return err
 	}
@@ -58,5 +64,11 @@ var parser = flags.NewParser(options, flags.Default)
 
 func init() {
 	parser.ParseIniFile(filepath.Join(options.Base,options.ConfigFilename))
+
+	parser.AddCommand("generate-config",
+		"Generates a template config file for oncilla-sim-wizard",
+		"This command generate a template config file for oncilla-sim-wizard. The config file uses the .ini format. At startup, oncilla-sim-wizard will always look for this file, and load its options. this options could always be overwitten by the command line options. One can use --path to generate this file in another poath that the one that will be looked for by oncilla-sim-wizard.",
+		&GenerateConfigExecuter{})
+
 }
 
