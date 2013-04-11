@@ -220,12 +220,12 @@ intersphinx_mapping = {
     'python': ('http://docs.python.org/',                      None),
     }
 
-external_modules_list=os.environ['sphinx_external_modules']
-if  len(external_modules_list) > 0 :
+if os.environ.has_key('sphinx_external_modules'):
+    external_modules_list=os.environ['sphinx_external_modules']
+    if  len(external_modules_list) > 0 :
+        for m in os.environ['sphinx_external_modules'].split(':'):
+            if os.environ.has_key(m):
+                intersphinx_mapping[m] = (os.environ[m], None)
 
-    for m in os.environ['sphinx_external_modules'].split(':'):
-        if os.environ.has_key(m):
-            intersphinx_mapping[m] = (os.environ[m], None)
-    
 
 
