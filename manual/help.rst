@@ -40,5 +40,12 @@ No backend for liboncilla were found
 ------------------------------------
 
 Make sure that you have a Webots version below 7.0 installed, for example the
-latest stable 6.x version (e.g. 6.4.4). Compatibility with Webots >= 7.0 will
-be added in the next releases of |project|.
+latest stable 6.x version (e.g. 6.4.4). Compatibility with Webots >= 7.0 might
+be added in upcoming releases of |project|.
+
+Reset of the simulation doesn`t work
+------------------------------------
+
+Make sure that you have a Webots version below 7.0 installed, for example the
+latest stable 6.x version (e.g. 6.4.4). Compatibility with Webots >= 7.0 might
+be added in upcoming releases of |project|.

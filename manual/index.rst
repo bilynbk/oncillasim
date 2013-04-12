@@ -27,5 +27,5 @@ obtain free 30 day trial version of the ``Webots PRO`` License.
 .. note::
 
    Currently |project| is compatible with Webots versions lower than 7.0. You
-   can download older Webots 6.x versions (e.g. 6.4.4)
+   can download older Webots 6.x versions (we recommend 6.4.4)
    `here <http://www.cyberbotics.com/archive/linux/>`_.

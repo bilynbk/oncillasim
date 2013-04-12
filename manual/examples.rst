@@ -36,9 +36,9 @@ Oncilla:
    used by CCA component remotely over the network (running on different
    machines) and by arbitrary C++, Java and Python applications using
    :ref:`RSB <rsb>`.
-   See Example 3 for a Python application. It also allows usage of the RSB tools
-   like :ref:`RSBag <rsbag>` for recording and replaying movements, see Example
-   4.
+   See Example 3 for a Python application. It also supports the usage of the
+   :ref:`RSB tools <rsb>` like the logger or :ref:`RSBag <rsbag>` for recording
+   and replaying movements, see Example 4.
 
 Example 1: Simple Sine Movement
 ===============================
