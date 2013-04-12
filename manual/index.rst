@@ -8,7 +8,7 @@
 ========================================
 
 .. image:: images/oncilla-sim.png
-  :width: 200px
+  :width: 300px
   :align: right
   :target: _images/oncilla-sim.png
 
