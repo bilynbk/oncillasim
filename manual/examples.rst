@@ -7,8 +7,14 @@
 When setting up a new project with the :ref:`Project Wizard <wizard>` it will
 come with a set of example to learn the usage of the simulation environment.
 
+.. image:: images/api-levels-new.png
+  :width: 450px
+  :align: right
+  :target: _images/api-levels-new.png
+  :alt: Oncilla API Levels (click to enlarge)
+
 All following examples will execute a simple sine movement by moving the
-:ref:`L1 and L2 joints <liboncilla:l1l2>` of the robot. You can sart the
+:ref:`L1 and L2 joints <liboncilla:l1l2>` of the robot. You can ssart the
 examples by opening the world files *worlds/Example...* in your project created
 by the :ref:`Project Wizard <wizard>`. (*Start Webots* -> *Open World*)
 
