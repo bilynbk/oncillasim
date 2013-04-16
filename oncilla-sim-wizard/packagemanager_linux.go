@@ -12,7 +12,13 @@ type AptManager struct {
 }
 
 func NewAptManager() (*AptManager, error) {
-	return nil, NewNotImplementedFunction("NewAptManager")
+	if _, err := exec.LookPath("apt-get"); err != nil {
+		return nil, fmt.Errorf("Could not find apt-get executable :%s", err)
+	}
+	if _, err := exec.LookPath("apt-cache"); err != nil {
+		return nil, fmt.Errorf("Could not find apt-cache executable :%s", err)
+	}
+	return &AptManager{}, nil
 }
 
 func (a *AptManager) HasPackage(name string) (bool, error) {
