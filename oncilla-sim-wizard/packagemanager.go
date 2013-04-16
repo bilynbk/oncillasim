@@ -3,5 +3,8 @@ package main
 type PackageManager interface {
 	HasPackage(name string) (bool, error)
 	InstallPackage(name string) (bool, error)
-	EnsurePacakage(names []string) error
+}
+
+func EnsurePackages(p *PackageManager, name []string) error {
+	return NewNotImplementedFunction("EnsurePackages")
 }
