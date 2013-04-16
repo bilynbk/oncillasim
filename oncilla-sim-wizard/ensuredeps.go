@@ -14,7 +14,20 @@ func (e *EnsureDependencyExecuter) Execute(args []string) error {
 		return fmt.Errorf("ensure-deps do not take arguments")
 	}
 
-	return NewNotImplementedMethod("EnsureDependencyExecuter", "Execute")
+	pm, err := GetPackageManager()
+	if err != nil {
+		return err
+	}
+
+	deps := []string{"liboncilla-dev", "git"}
+
+	err = EnsurePackages(pm, deps)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
 
 func init() {
