@@ -22,11 +22,26 @@ func NewAptManager() (*AptManager, error) {
 }
 
 func (a *AptManager) HasPackage(name string) (bool, error) {
-	return false, NewNotImplementedMethod("AptManager", "HasPackage")
+	cmd := exec.Command("apt-cache", "policy", name)
+
+	out, err := cmd.Output()
+	if err != nil {
+		return false, err
+	}
+
+	if len(out) == 0 {
+		return false, fmt.Errorf("Could not find a package named %s", name)
+	}
+
+	if notInstalled, _ := regexp.MatchString(`Installed:\s(none)`, string(out)); notInstalled == true {
+		return false, nil
+	}
+
+	return true, nil
 }
 
-func (a *AptManager) InstallPackage(name string) (bool, error) {
-	return false, NewNotImplementedMethod("AptManager", "InstallPackage")
+func (a *AptManager) InstallPackage(name string) error {
+	return NewNotImplementedMethod("AptManager", "InstallPackage")
 }
 
 func GetPackageManager() (PackageManager, error) {
