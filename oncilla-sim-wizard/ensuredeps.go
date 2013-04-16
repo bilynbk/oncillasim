@@ -21,7 +21,7 @@ func (e *EnsureDependencyExecuter) Execute(args []string) error {
 
 	deps := []string{"liboncilla-dev", "git"}
 
-	err = EnsurePackages(pm, deps)
+	err = EnsurePackages(&pm, deps)
 	if err != nil {
 		return err
 	}
