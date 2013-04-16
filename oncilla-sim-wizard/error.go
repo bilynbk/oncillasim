@@ -14,7 +14,7 @@ func NewNotImplementedMethod(struct_, method string) *NotImplementedError {
 }
 
 func (e *NotImplementedError) Error() string {
-	if len(e.Struct) > 0 {
+	if len(e.Struct) == 0 {
 		return "Function " + e.Method + "() is not implemented"
 	}
 	return "Method " + e.Struct + "." + e.Method + "() is not implemented"
