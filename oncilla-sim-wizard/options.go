@@ -1,20 +1,19 @@
 package main
 
 import (
-	"github.com/jessevdk/go-flags"
 	"fmt"
+	"github.com/jessevdk/go-flags"
 	"path/filepath"
 )
 
-
 /* General options for oncilla-sim-wizard */
 type Options struct {
-	Verbose bool `short:"v" long:"verbose" description:"Verbose output"`
-	LiboncillaRepo map[string]string `long:"liboncilla" description:"URL of the liboncilla repo. accepts 'remote' and 'tag' key, remote is mandatory."`
+	Verbose              bool              `short:"v" long:"verbose" description:"Verbose output"`
+	LiboncillaRepo       map[string]string `long:"liboncilla" description:"URL of the liboncilla repo. accepts 'remote' and 'tag' key, remote is mandatory."`
 	LiboncillaWebotsRepo map[string]string `long:"liboncilla-webots" description:"URL of the liboncilla-webots repo. accepts 'remote' and 'tag' key, remote is mandatory."`
-	CCAOncillaRepo map[string]string `long:"ccaoncilla" description:"URL of the ccaoncilla repo. accepts 'remote' and 'tag' key, remote is mandatory."`
-	Base string
-	ConfigFilename string
+	CCAOncillaRepo       map[string]string `long:"ccaoncilla" description:"URL of the ccaoncilla repo. accepts 'remote' and 'tag' key, remote is mandatory."`
+	Base                 string
+	ConfigFilename       string
 }
 
 type GenerateConfigExecuter struct {
@@ -30,10 +29,10 @@ func (g *GenerateConfigExecuter) Execute(args []string) error {
 	if len(g.Path) > 0 {
 		filename = g.Path
 	} else {
-		filename = filepath.Join(options.Base,options.ConfigFilename)
+		filename = filepath.Join(options.Base, options.ConfigFilename)
 	}
-	
-	if err := parser.WriteIniToFile(filename, flags.IniIncludeComments | flags.IniIncludeDefaults); err != nil {
+
+	if err := parser.WriteIniToFile(filename, flags.IniIncludeComments|flags.IniIncludeDefaults); err != nil {
 		return err
 	}
 
@@ -42,28 +41,26 @@ func (g *GenerateConfigExecuter) Execute(args []string) error {
 
 /* Sensible good default for the options, no tags, but good remotes */
 
-var options = &Options {
-LiboncillaRepo: map[string]string{
-		"remote":"https://redmine.amarsi-project.eu/git/quaddrivers.git",
+var options = &Options{
+	LiboncillaRepo: map[string]string{
+		"remote": "https://redmine.amarsi-project.eu/git/quaddrivers.git",
 	},
-LiboncillaWebotsRepo: map[string]string{
-		"remote":"https://redmine.amarsi-project.eu/git/liboncilla-webots.git",
+	LiboncillaWebotsRepo: map[string]string{
+		"remote": "https://redmine.amarsi-project.eu/git/liboncilla-webots.git",
 	},
-CCAOncillaRepo: map[string]string{
-		"remote":"https://redmine.amarsi-project.eu/git/oncilla-cca.git",
-	}, 
-	Base: "/usr/share/oncilla-sim",
+	CCAOncillaRepo: map[string]string{
+		"remote": "https://redmine.amarsi-project.eu/git/oncilla-cca.git",
+	},
+	Base:           "/usr/share/oncilla-sim",
 	ConfigFilename: "wizard.config",
 }
 
 /* load the config from a config file on the system */
 
-
 var parser = flags.NewParser(options, flags.Default)
 
-
 func init() {
-	parser.ParseIniFile(filepath.Join(options.Base,options.ConfigFilename))
+	parser.ParseIniFile(filepath.Join(options.Base, options.ConfigFilename))
 
 	parser.AddCommand("generate-config",
 		"Generates a template config file for oncilla-sim-wizard",
@@ -71,4 +68,3 @@ func init() {
 		&GenerateConfigExecuter{})
 
 }
-

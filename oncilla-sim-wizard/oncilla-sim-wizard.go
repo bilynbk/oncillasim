@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	if _,err := parser.Parse(); err != nil {
+	if _, err := parser.Parse(); err != nil {
 		os.Exit(1)
 	}
 }

@@ -4,8 +4,6 @@ import (
 	"os"
 )
 
-
-
 func main() {
 	parser.ApplicationName = "oncilla-sim-wizard"
 
