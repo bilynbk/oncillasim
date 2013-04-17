@@ -44,7 +44,15 @@ func (a *AptManager) InstallPackage(name string) error {
 	return NewNotImplementedMethod("AptManager", "InstallPackage")
 }
 
-func GetPackageManager() (PackageManager, error) {
+func (a *AptManager) DoesListRepository(r RepositoryDefinition) (bool, error) {
+	return false, NewNotImplementedMethod("AptManager", "DoesListRepository")
+}
+
+func (a *AptManager) AddRepository(r RepositoryDefinition) error {
+	return NewNotImplementedMethod("AptManager", "AddRepository")
+}
+
+func GetPackageManager() (*SystemDependencies, error) {
 	cmd := exec.Command("lsb_release", "-i", "-c")
 
 	out, err := cmd.Output()
@@ -59,5 +67,21 @@ func GetPackageManager() (PackageManager, error) {
 		return nil, fmt.Errorf("I do not seems to be runned on ubuntu precise, output of `lsb_release -c -i' is :\n%s", out)
 	}
 
-	return NewAptManager()
+	m, err := NewAptManager()
+	if err != nil {
+		return nil, err
+	}
+
+	return &SystemDependencies{
+		manager:  m,
+		packages: []string{"liboncilla-webots-dev", "git"},
+		repDefs: []RepositoryDefinition{
+			RepositoryDefinition{"url": "http://biorob2.epfl.ch/users/tuleu/ubuntu",
+				"components": "main",
+				"key":        "http://biorob2.epfl.ch/users/tuleu/ubuntu/gpg.key"},
+			RepositoryDefinition{"url": "http://packages.cor-lab.de/ubuntu",
+				"components": "main",
+				"key":        "http://packages.cor-lab.de/keys/corlab.asc"},
+		},
+	}, nil
 }

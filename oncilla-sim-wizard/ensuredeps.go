@@ -14,14 +14,12 @@ func (e *EnsureDependencyExecuter) Execute(args []string) error {
 		return fmt.Errorf("ensure-deps do not take arguments")
 	}
 
-	pm, err := GetPackageManager()
+	s, err := GetPackageManager()
 	if err != nil {
 		return err
 	}
 
-	deps := []string{"liboncilla-dev", "git"}
-
-	err = EnsurePackages(pm, deps)
+	err = s.EnsureSystemDependencies()
 	if err != nil {
 		return err
 	}
