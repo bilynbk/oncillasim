@@ -4,6 +4,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"regexp"
 )
@@ -41,7 +42,24 @@ func (a *AptManager) HasPackage(name string) (bool, error) {
 }
 
 func (a *AptManager) InstallPackage(name string) error {
-	return NewNotImplementedMethod("AptManager", "InstallPackage")
+	args := []string{
+		"apt-get",
+		"install",
+		"-y",
+		name,
+	}
+
+	cmd := exec.Command("sudo", args...)
+
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (a *AptManager) DoesListRepository(r RepositoryDefinition) (bool, error) {
