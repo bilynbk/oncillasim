@@ -6,10 +6,13 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 )
 
 type AptManager struct {
+	repositories map[string]RepositoryDefinition
+	distribution string
 }
 
 func NewAptManager() (*AptManager, error) {
@@ -19,7 +22,10 @@ func NewAptManager() (*AptManager, error) {
 	if _, err := exec.LookPath("apt-cache"); err != nil {
 		return nil, fmt.Errorf("Could not find apt-cache executable :%s", err)
 	}
-	return &AptManager{}, nil
+	return &AptManager{
+		repositories: map[string]RepositoryDefinition{},
+		distribution: "precise",
+	}, nil
 }
 
 func (a *AptManager) HasPackage(name string) (bool, error) {
@@ -43,13 +49,12 @@ func (a *AptManager) HasPackage(name string) (bool, error) {
 
 func (a *AptManager) InstallPackage(name string) error {
 	args := []string{
-		"apt-get",
 		"install",
 		"-y",
 		name,
 	}
 
-	cmd := exec.Command("sudo", args...)
+	cmd := exec.Command("apt-get", args...)
 
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
@@ -62,12 +67,102 @@ func (a *AptManager) InstallPackage(name string) error {
 	return nil
 }
 
+func (a *AptManager) AddRepoFromListFile(listFile string) error {
+	return NewNotImplementedMethod("AptManager", "AddRepoFromListFile")
+}
+
+func (a *AptManager) UpdateCurrentRepositories() error {
+	//I assume here that a debian system should have at least one apt repository listed
+	if len(a.repositories) > 0 {
+		return nil
+	}
+
+	listFiles, err := filepath.Glob("/etc/apt/sources.list.d/*.list")
+	if err != nil {
+		return err
+	}
+
+	listFiles = append(listFiles, "/etc/apt/sources.list")
+
+	for _, l := range listFiles {
+		err = a.AddRepoFromListFile(l)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (a *AptManager) repDefIsConform(r RepositoryDefinition) (bool, error) {
+
+	if _, hasUrl := r["url"]; hasUrl == false {
+		return false, fmt.Errorf("Repository Definition should have an url")
+	}
+
+	if _, hasKey := r["key"]; hasKey != false {
+		return false, fmt.Errorf("Repository definition should contain a key")
+	}
+
+	return true, nil
+}
+
 func (a *AptManager) DoesListRepository(r RepositoryDefinition) (bool, error) {
-	return false, NewNotImplementedMethod("AptManager", "DoesListRepository")
+	if err := a.UpdateCurrentRepositories(); err != nil {
+		return false, err
+	}
+
+	if _, err := a.repDefIsConform(r); err != nil {
+		return false, err
+	}
+
+	_, ok := a.repositories[r["url"]]
+
+	return ok, nil
 }
 
 func (a *AptManager) AddRepository(r RepositoryDefinition) error {
-	return NewNotImplementedMethod("AptManager", "AddRepository")
+	if err := a.UpdateCurrentRepositories(); err != nil {
+		return err
+	}
+
+	if _, err := a.repDefIsConform(r); err != nil {
+		return err
+	}
+
+	components, ok := r["components"]
+	if ok == false {
+		components = "main"
+	}
+
+	//adds repositories key
+	cmd := exec.Command("apt-key", "adv", "--fetch-keys", r["key"])
+
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	//adds repositories sources
+	f, err := os.OpenFile("/etc/apt/sources.lists.d/oncilla-sim-wizard.list",
+		os.O_RDWR|os.O_CREATE|os.O_APPEND,
+		0666)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Fprintf(f, "deb %s %s %s\n", r["url"], a.distribution, components)
+
+	//update sources
+	cmd = exec.Command("apt-get", "update")
+
+	err = cmd.Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
 
 func GetPackageManager() (*SystemDependencies, error) {
