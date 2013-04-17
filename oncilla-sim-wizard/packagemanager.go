@@ -19,7 +19,7 @@ type SystemDependencies struct {
 	repDefs  []RepositoryDefinition
 }
 
-func (s *SystemDependencies) SystemDependenciesAreMet() (bool, error) {
+func (s *SystemDependencies) CheckSystemDependencies() (bool, error) {
 
 	for _, r := range s.repDefs {
 

@@ -165,7 +165,7 @@ func (a *AptManager) AddRepository(r RepositoryDefinition) error {
 
 }
 
-func GetPackageManager() (*SystemDependencies, error) {
+func GetSystemDependencies() (*SystemDependencies, error) {
 	cmd := exec.Command("lsb_release", "-i", "-c")
 
 	out, err := cmd.Output()

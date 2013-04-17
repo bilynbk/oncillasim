@@ -14,7 +14,7 @@ func (e *EnsureDependencyExecuter) Execute(args []string) error {
 		return fmt.Errorf("ensure-deps do not take arguments")
 	}
 
-	s, err := GetPackageManager()
+	s, err := GetSystemDependencies()
 	if err != nil {
 		return err
 	}
