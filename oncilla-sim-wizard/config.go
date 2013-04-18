@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -112,9 +113,21 @@ func GetConfig() *Config {
 }
 
 func (c *Config) GetRepositoriesForOS(os string) ([]RepositoryDefinition, error) {
-	return []RepositoryDefinition{}, NewNotImplementedMethod("Config", "GetRepositoriesForOS")
+	res, ok := c.repDefByOS[os]
+	if ok == false {
+		return []RepositoryDefinition{}, fmt.Errorf("Unsupported OS `%s'", os)
+	}
+
+	return res, nil
+
 }
 
 func (c *Config) GetPackagesForOS(os string) (PackageList, error) {
-	return PackageList{}, NewNotImplementedMethod("Config", "GetPackagesForOS")
+	res, ok := c.packagesByOS[os]
+	if ok == false {
+		return PackageList{}, fmt.Errorf("Unsupported OS `%s'", os)
+	}
+
+	return res, nil
+
 }
