@@ -65,6 +65,8 @@ func RunCommand(cmd_ string, args ...string) error {
 func RunCommandOutput(cmd_ string, args ...string) ([]byte, error) {
 	cmd := prepareCommand(cmd_, args)
 
+	cmd.Stdout = nil
+
 	out, err := cmd.Output()
 
 	if err != nil {

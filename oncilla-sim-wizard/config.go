@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -65,8 +64,8 @@ func GetConfig() *Config {
 
 		config = &Config{}
 		err := initConfigFromJSON(config)
-		if err != nil && options.Verbose == true {
-			fmt.Fprintf(os.Stderr, "Warning during config reading : %s\n", err)
+		if err != nil {
+			log.Printf("[WARNING] error while reading config : %s\n", err)
 		}
 
 	}
