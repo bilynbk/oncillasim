@@ -165,36 +165,51 @@ func (a *AptManager) AddRepository(r RepositoryDefinition) error {
 
 }
 
-func GetSystemDependencies() (*SystemDependencies, error) {
+func getPackageManagerAndDistName() (PackageManager, string, error) {
 	cmd := exec.Command("lsb_release", "-i", "-c")
 
 	out, err := cmd.Output()
 	if err != nil {
-		return nil, fmt.Errorf("I only support ubuntu precise, and I do not seems to be run on this system since I cannot process `lsb_release -i -c' : %s", err)
+		return nil, "", fmt.Errorf("I only support ubuntu precise, and I do not seems to be run on this system since I cannot process `lsb_release -i -c' : %s", err)
 	}
 
 	isUbuntu, _ := regexp.MatchString("[uU]buntu", string(out))
 	isPrecise, _ := regexp.MatchString("[Pp]recise", string(out))
 
 	if isUbuntu != true || isPrecise != true {
-		return nil, fmt.Errorf("I do not seems to be runned on ubuntu precise, output of `lsb_release -c -i' is :\n%s", out)
+		return nil, "", fmt.Errorf("I do not seems to be runned on ubuntu precise, output of `lsb_release -c -i' is :\n%s", out)
 	}
 
 	m, err := NewAptManager()
+	if err != nil {
+		return nil, "", err
+	}
+	return m, "ubuntu/precise", nil
+}
+
+func GetSystemDependencies() (*SystemDependencies, error) {
+
+	pm, system, err := getPackageManagerAndDistName()
+	if err != nil {
+		return nil, err
+	}
+
+	// fetch packages and repository from dynamic config
+	c := GetConfig()
+
+	packages, err := c.GetPackagesForOS(system)
+	if err != nil {
+		return nil, err
+	}
+
+	reps, err := c.GetRepositoriesForOS(system)
 	if err != nil {
 		return nil, err
 	}
 
 	return &SystemDependencies{
-		manager:  m,
-		packages: []string{"liboncilla-webots-dev", "git"},
-		repDefs: []RepositoryDefinition{
-			RepositoryDefinition{"url": "http://biorob2.epfl.ch/users/tuleu/ubuntu",
-				"components": "main",
-				"key":        "http://biorob2.epfl.ch/users/tuleu/ubuntu/gpg.key"},
-			RepositoryDefinition{"url": "http://packages.cor-lab.de/ubuntu",
-				"components": "main",
-				"key":        "http://packages.cor-lab.de/keys/corlab.asc"},
-		},
+		manager:  pm,
+		packages: packages,
+		repDefs:  reps,
 	}, nil
 }
