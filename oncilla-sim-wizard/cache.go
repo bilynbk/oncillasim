@@ -107,13 +107,22 @@ func (c *Cache) updateCache() error {
 
 	log.Println("Caching remote git repositories.")
 
-	for _, g := range config.Repositories {
-		reg, _ := regexp.Compile(`([\w\-]+).git\z`)
-		m := reg.FindStringSubmatch(g["url"])
-		if m == nil {
+	for _, g := range config.GitRepositories {
+
+		//checks that this is a git url
+		if match, _ := regexp.MatchString(`\.git\z`, g["url"]); match == false {
 			return fmt.Errorf("Cannot cache git repository %s, url `%s' does not seems to refer to a git repository.", g, g["url"])
 		}
-		name := m[1]
+
+		if _, hasUrl := g["url"]; hasUrl == false {
+			return fmt.Errorf("Invalid repository definition %s, I need a `url' key", g)
+		}
+
+		name, hasName := g["name"]
+		if hasName == false {
+			return fmt.Errorf("Invalid repository definition %s, I need a `name' key", g)
+		}
+
 		if err := c.updateCachedGitRepository(name, g); err != nil {
 			return err
 		}
