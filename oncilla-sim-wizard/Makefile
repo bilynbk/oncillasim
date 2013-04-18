@@ -59,3 +59,6 @@ $(TARGET).man: .gen-man
 	$(call vecho,MAN,$@) ./.gen-man > $@
 
 .PHONY: install clean all
+
+check:
+	go test $(SOURCES)

@@ -3,17 +3,25 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"io"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
 )
 
+// Represents a system managed by apt
 type AptManager struct {
+	//repositories definition indexed by url
 	repositories map[string]RepositoryDefinition
 	distribution string
 }
+
+// Creates a new AptManager, would fail if `apt-cache' or `apt-get'
+// are not present on the system
 
 func NewAptManager() (*AptManager, error) {
 	if _, err := exec.LookPath("apt-get"); err != nil {
@@ -60,12 +68,46 @@ func (a *AptManager) InstallPackage(name string) error {
 	return nil
 }
 
-func (a *AptManager) AddRepoFromListFile(listFile string) error {
-	return NewNotImplementedMethod("AptManager", "AddRepoFromListFile")
+// Parses a given apt listFiles and include all repo listed in the
+// manager list
+func (a *AptManager) addRepoFromList(listFile io.Reader) error {
+
+	reader := bufio.NewReader(listFile)
+
+	//really complex regexp, but unit tested with lot of weird cases
+	reg, _ := regexp.Compile(`\A\s*deb\s+(http[s]?://[^\s]+)\s+([^\s]+)\s+([^\s#]+(\s+[^\s#]+)*){1}`)
+
+	for {
+		line, err := reader.ReadString('\n')
+
+		m := reg.FindStringSubmatch(line)
+
+		if m != nil {
+
+			name := m[1]
+			dist := m[2]
+			comps := m[3]
+
+			a.repositories[name] = RepositoryDefinition{
+				"url":        name,
+				"codename":   dist,
+				"components": comps,
+			}
+
+		}
+
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			return err
+		}
+
+	}
+
+	return nil
 }
 
-func (a *AptManager) UpdateCurrentRepositories() error {
-	//I assume here that a debian system should have at least one apt repository listed
+func (a *AptManager) updateCurrentRepositories() error {
 	if len(a.repositories) > 0 {
 		return nil
 	}
@@ -78,7 +120,12 @@ func (a *AptManager) UpdateCurrentRepositories() error {
 	listFiles = append(listFiles, "/etc/apt/sources.list")
 
 	for _, l := range listFiles {
-		err = a.AddRepoFromListFile(l)
+		file, err := os.Open(l)
+		if err != nil {
+			return err
+		}
+
+		err = a.addRepoFromList(file)
 		if err != nil {
 			return err
 		}
@@ -87,6 +134,8 @@ func (a *AptManager) UpdateCurrentRepositories() error {
 	return nil
 }
 
+// Checks that the RepositoryDefinitions has all the required keys for
+// a apt-repository ( currently 'url' and 'key').
 func (a *AptManager) repDefIsConform(r RepositoryDefinition) (bool, error) {
 
 	if _, hasUrl := r["url"]; hasUrl == false {
@@ -101,9 +150,11 @@ func (a *AptManager) repDefIsConform(r RepositoryDefinition) (bool, error) {
 }
 
 func (a *AptManager) DoesListRepository(r RepositoryDefinition) (bool, error) {
-	if err := a.UpdateCurrentRepositories(); err != nil {
+	if err := a.updateCurrentRepositories(); err != nil {
 		return false, err
 	}
+
+	log.Printf("Checking for repository %s ....", r)
 
 	if _, err := a.repDefIsConform(r); err != nil {
 		return false, err
@@ -111,11 +162,17 @@ func (a *AptManager) DoesListRepository(r RepositoryDefinition) (bool, error) {
 
 	_, ok := a.repositories[r["url"]]
 
+	if ok == true {
+		log.Println("found")
+	} else {
+		log.Println("not found")
+	}
+
 	return ok, nil
 }
 
 func (a *AptManager) AddRepository(r RepositoryDefinition) error {
-	if err := a.UpdateCurrentRepositories(); err != nil {
+	if err := a.updateCurrentRepositories(); err != nil {
 		return err
 	}
 
@@ -154,6 +211,8 @@ func (a *AptManager) AddRepository(r RepositoryDefinition) error {
 
 }
 
+// Returns the standard package manager that is runned on this linux
+// distribution
 func getPackageManagerAndDistName() (PackageManager, string, error) {
 	out, err := RunCommandOutput("lsb_release", "-i", "-c")
 	if err != nil {
@@ -174,6 +233,7 @@ func getPackageManagerAndDistName() (PackageManager, string, error) {
 	return m, "ubuntu/precise", nil
 }
 
+// Returns the system dependency for this linux system
 func GetSystemDependencies() (*SystemDependencies, error) {
 
 	pm, system, err := getPackageManagerAndDistName()

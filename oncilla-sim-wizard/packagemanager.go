@@ -7,19 +7,34 @@ import (
 
 type RepositoryDefinition map[string]string
 
+// A package manager is a tool that is used to install software and
+// their dependencies. OS independant abstraction of a package
+// manager. It needs two concepts :
+// 
+// * package : represent a software unit.
+// * repository : a package manager can often list packages
+//   precompiled on a repository. It said listed on the system
+
 type PackageManager interface {
+	// Checks if a given package is installed
 	HasPackage(name string) (bool, error)
+	// Installs a given package
 	InstallPackage(name string) error
+	// Checks if a repository is listed on a system
 	DoesListRepository(repo RepositoryDefinition) (bool, error)
+	// Adds the repository in the list of sources of the package
+	// manager
 	AddRepository(repo RepositoryDefinition) error
 }
 
+// Represents all system dependencies
 type SystemDependencies struct {
 	manager  PackageManager
 	packages []string
 	repDefs  []RepositoryDefinition
 }
 
+// Checks that all system dependencies are met
 func (s *SystemDependencies) CheckSystemDependencies() (bool, error) {
 	log.Printf("Ensuring that all system dependencies are present....")
 
@@ -54,6 +69,8 @@ func (s *SystemDependencies) CheckSystemDependencies() (bool, error) {
 	return true, nil
 }
 
+// Ensures that all dependencies are met on the system. Stops on the
+// first error
 func (s *SystemDependencies) EnsureSystemDependencies() error {
 
 	log.Println("Ensuring all system dependencies are present")
@@ -69,6 +86,7 @@ func (s *SystemDependencies) EnsureSystemDependencies() error {
 	return nil
 }
 
+// Ensures that all repositories are listed on the 
 func (s *SystemDependencies) EnsureRepositoryListed() error {
 
 	log.Println("  Ensuring package manager list all repositories")
@@ -98,6 +116,8 @@ func (s *SystemDependencies) EnsureRepositoryListed() error {
 
 	return nil
 }
+
+// Ensures that all packages are installed on the system
 
 func (s *SystemDependencies) EnsurePackages() error {
 
