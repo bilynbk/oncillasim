@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 )
 
 type CreateExecuter struct {
@@ -12,6 +13,8 @@ func (c *CreateExecuter) Execute(args []string) error {
 		return fmt.Errorf("You should provide the expected location")
 	}
 	path := args[0]
+
+	log.Println("Creating new project tree in `", path, "'")
 
 	s, err := GetSystemDependencies()
 	if err != nil {

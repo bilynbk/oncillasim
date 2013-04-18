@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 )
 
 type RepositoryDefinition map[string]string
@@ -20,6 +21,7 @@ type SystemDependencies struct {
 }
 
 func (s *SystemDependencies) CheckSystemDependencies() (bool, error) {
+	log.Printf("Ensuring that all system dependencies are present....")
 
 	for _, r := range s.repDefs {
 
@@ -47,10 +49,14 @@ func (s *SystemDependencies) CheckSystemDependencies() (bool, error) {
 
 	}
 
+	log.Println("done.")
+
 	return true, nil
 }
 
 func (s *SystemDependencies) EnsureSystemDependencies() error {
+
+	log.Println("Ensuring all system dependencies are present")
 
 	if err := s.EnsureRepositoryListed(); err != nil {
 		return err
@@ -64,6 +70,9 @@ func (s *SystemDependencies) EnsureSystemDependencies() error {
 }
 
 func (s *SystemDependencies) EnsureRepositoryListed() error {
+
+	log.Println("  Ensuring package manager list all repositories")
+
 	for _, r := range s.repDefs {
 
 		listed, err := s.manager.DoesListRepository(r)
@@ -72,13 +81,18 @@ func (s *SystemDependencies) EnsureRepositoryListed() error {
 		}
 
 		if listed == true {
+			log.Println("    Repository `", r, "' is listed in the system.")
 			continue
 		}
+
+		log.Printf("    Adding repository `%s' to the system.....", r)
 
 		err = s.manager.AddRepository(r)
 		if err != nil {
 			return err
 		}
+
+		log.Println("done.")
 
 	}
 
@@ -86,6 +100,9 @@ func (s *SystemDependencies) EnsureRepositoryListed() error {
 }
 
 func (s *SystemDependencies) EnsurePackages() error {
+
+	log.Println("  Ensuring all packages are installed")
+
 	for _, p := range s.packages {
 
 		ins, err := s.manager.HasPackage(p)
@@ -94,13 +111,15 @@ func (s *SystemDependencies) EnsurePackages() error {
 		}
 
 		if ins == true {
+			log.Println("    Package `", p, "' is installed.")
 			continue
 		}
-
+		log.Printf("    Installing package `%s'.....", p)
 		err = s.manager.InstallPackage(p)
 		if err != nil {
 			return err
 		}
+		log.Println("done.")
 
 	}
 

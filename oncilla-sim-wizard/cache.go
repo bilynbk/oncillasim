@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -31,6 +32,9 @@ func GetCache() (*Cache, error) {
 }
 
 func (c *Cache) updateCachedGitRepository(name string, g GitRepository) error {
+
+	log.Printf("Caching git repository `%s' from `%s'.\n", name, g["url"])
+
 	gitDir := filepath.Join(c.root, "git")
 
 	if err := os.MkdirAll(gitDir, 0644); err != nil {
@@ -62,6 +66,8 @@ func (c *Cache) updateCachedGitRepository(name string, g GitRepository) error {
 	}
 
 	if tag, hasTag := g["tag"]; hasTag == true {
+		log.Printf("Fetching tag `%s'.\n", tag)
+
 		if err := RunCommand("git", "checkout", tag); err != nil {
 			return err
 		}
@@ -84,16 +90,23 @@ func (c *Cache) ensureCacheRoot() error {
 		return fmt.Errorf("Could not create the cache `%s' : %s", c.root, err)
 	}
 
+	log.Println("Found cache in directory `", c.root, "'.")
+
 	return nil
 }
 
 func (c *Cache) updateCache() error {
+
+	log.Println("Updating cache.")
 
 	if err := c.ensureCacheRoot(); err != nil {
 		return nil
 	}
 
 	config := GetConfig()
+
+	log.Println("Caching remote git repositories.")
+
 	for _, g := range config.Repositories {
 		reg, _ := regexp.Compile(`([\w\-]+).git\z`)
 		m := reg.FindStringSubmatch(g["url"])

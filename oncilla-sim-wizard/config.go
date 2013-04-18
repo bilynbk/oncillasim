@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"regexp"
@@ -26,6 +27,7 @@ type Config struct {
 var config *Config = nil
 
 func initConfigFromJSON(c *Config) error {
+	log.Println("Fetching configuration from `", options.ConfigPath, "'")
 	var r io.Reader
 	if ok, _ := regexp.MatchString(`\Ahttp://`, options.ConfigPath); ok == true {
 
