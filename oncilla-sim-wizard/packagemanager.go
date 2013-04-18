@@ -36,7 +36,7 @@ type SystemDependencies struct {
 
 // Checks that all system dependencies are met
 func (s *SystemDependencies) CheckSystemDependencies() (bool, error) {
-	log.Printf("Ensuring that all system dependencies are present....")
+	log.Println("Ensuring that all system dependencies are present.")
 
 	for _, r := range s.repDefs {
 
@@ -63,8 +63,6 @@ func (s *SystemDependencies) CheckSystemDependencies() (bool, error) {
 		}
 
 	}
-
-	log.Println("done.")
 
 	return true, nil
 }
@@ -103,14 +101,12 @@ func (s *SystemDependencies) EnsureRepositoryListed() error {
 			continue
 		}
 
-		log.Printf("    Adding repository `%s' to the system.....", r)
+		log.Printf("    Adding repository `%s' to the system.", r)
 
 		err = s.manager.AddRepository(r)
 		if err != nil {
 			return err
 		}
-
-		log.Println("done.")
 
 	}
 
@@ -134,12 +130,11 @@ func (s *SystemDependencies) EnsurePackages() error {
 			log.Println("    Package `", p, "' is installed.")
 			continue
 		}
-		log.Printf("    Installing package `%s'.....", p)
+		log.Printf("    Installing package `%s'.", p)
 		err = s.manager.InstallPackage(p)
 		if err != nil {
 			return err
 		}
-		log.Println("done.")
 
 	}
 

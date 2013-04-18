@@ -6,7 +6,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -142,7 +141,7 @@ func (a *AptManager) repDefIsConform(r RepositoryDefinition) (bool, error) {
 		return false, fmt.Errorf("Repository Definition should have an url")
 	}
 
-	if _, hasKey := r["key"]; hasKey != false {
+	if _, hasKey := r["key"]; hasKey == false {
 		return false, fmt.Errorf("Repository definition should contain a key")
 	}
 
@@ -154,19 +153,11 @@ func (a *AptManager) DoesListRepository(r RepositoryDefinition) (bool, error) {
 		return false, err
 	}
 
-	log.Printf("Checking for repository %s ....", r)
-
 	if _, err := a.repDefIsConform(r); err != nil {
 		return false, err
 	}
 
 	_, ok := a.repositories[r["url"]]
-
-	if ok == true {
-		log.Println("found")
-	} else {
-		log.Println("not found")
-	}
 
 	return ok, nil
 }
@@ -191,7 +182,7 @@ func (a *AptManager) AddRepository(r RepositoryDefinition) error {
 	}
 
 	//adds repositories sources
-	f, err := os.OpenFile("/etc/apt/sources.lists.d/oncilla-sim-wizard.list",
+	f, err := os.OpenFile("/etc/apt/sources.list.d/oncilla-sim-wizard.list",
 		os.O_RDWR|os.O_CREATE|os.O_APPEND,
 		0666)
 
