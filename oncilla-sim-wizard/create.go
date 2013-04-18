@@ -11,6 +11,7 @@ func (c *CreateExecuter) Execute(args []string) error {
 	if len(args) != 1 {
 		return fmt.Errorf("You should provide the expected location")
 	}
+	path := args[0]
 
 	s, err := GetSystemDependencies()
 	if err != nil {
@@ -22,7 +23,26 @@ func (c *CreateExecuter) Execute(args []string) error {
 		return fmt.Errorf("System dependencies are not met, please run `ensure-deps' command first. Depending on your platform you will most certainly need super user rights.\nUnmet dependencies : %s", err)
 	}
 
-	return NewNotImplementedMethod("CreateExecuter", "Execute")
+	if ok, err := CanCreateProjectTree(path); err != nil {
+		return fmt.Errorf("Could not create a new project tree in `%s', reason : %s", path, err)
+	} else if ok == false {
+		return fmt.Errorf("Could not create a new project tree in `%s'.", path)
+	}
+
+	oPTree, err := CreateProjectTree(path)
+	if err != nil {
+		return err
+	}
+
+	if err = oPTree.UpdateFiles(); err != nil {
+		return err
+	}
+
+	if err = oPTree.Compile(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func init() {
