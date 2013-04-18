@@ -37,7 +37,7 @@ func (c *Cache) updateCachedGitRepository(name string, g GitRepository) error {
 
 	gitDir := filepath.Join(c.root, "git")
 
-	if err := os.MkdirAll(gitDir, 0644); err != nil {
+	if err := os.MkdirAll(gitDir, 0755); err != nil {
 		return err
 	}
 
@@ -86,7 +86,7 @@ func (c *Cache) ensureCacheRoot() error {
 		c.root = filepath.Join(os.Getenv("HOME"), ".cache", "oncilla-sim-wizard")
 	}
 
-	if err := os.MkdirAll(c.root, 0644); err != nil {
+	if err := os.MkdirAll(c.root, 0755); err != nil {
 		return fmt.Errorf("Could not create the cache `%s' : %s", c.root, err)
 	}
 

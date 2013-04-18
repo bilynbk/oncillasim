@@ -95,7 +95,7 @@ func OpenProjectTree(path string) (*OncillaProjectTree, error) {
 
 // Creates a new OncillaProjectTree
 func CreateProjectTree(path string) (*OncillaProjectTree, error) {
-	if err := os.MkdirAll(path, 0644); err != nil {
+	if err := os.MkdirAll(path, 0755); err != nil {
 		return nil, err
 	}
 
