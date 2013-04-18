@@ -36,21 +36,41 @@ func Exists(path string) (bool, error) {
 	return false, err
 }
 
-func RunCommand(cmd string, args ...string) error {
-	cmd_ := exec.Command(cmd, args...)
+func prepareCommand(cmd_ string, args []string) *exec.Cmd {
+	cmd := exec.Command(cmd_, args...)
 
 	if options.Verbose == true {
-		cmd_.Stderr = os.Stderr
-		cmd_.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Stdout = os.Stdout
 	} else {
-		cmd_.Stderr = nil
-		cmd_.Stdout = nil
+		cmd.Stderr = nil
+		cmd.Stdout = nil
 	}
 
-	if err := cmd_.Run(); err != nil {
-		return fmt.Errorf("Error while executing %s : %s", cmd_.Args, err)
+	return cmd
+
+}
+
+func RunCommand(cmd_ string, args ...string) error {
+	cmd := prepareCommand(cmd_, args)
+
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("Error while executing %s : %s", cmd.Args, err)
 	}
 
 	return nil
+
+}
+
+func RunCommandOutput(cmd_ string, args ...string) ([]byte, error) {
+	cmd := prepareCommand(cmd_, args)
+
+	out, err := cmd.Output()
+
+	if err != nil {
+		return out, fmt.Errorf("Error while executing %s : %s", cmd.Args, err)
+	}
+
+	return out, err
 
 }

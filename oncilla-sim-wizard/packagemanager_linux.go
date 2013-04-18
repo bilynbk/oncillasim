@@ -29,9 +29,8 @@ func NewAptManager() (*AptManager, error) {
 }
 
 func (a *AptManager) HasPackage(name string) (bool, error) {
-	cmd := exec.Command("apt-cache", "policy", name)
 
-	out, err := cmd.Output()
+	out, err := RunCommandOutput("apt-cache", "policy", name)
 	if err != nil {
 		return false, err
 	}
@@ -54,13 +53,7 @@ func (a *AptManager) InstallPackage(name string) error {
 		name,
 	}
 
-	cmd := exec.Command("apt-get", args...)
-
-	cmd.Stdin = os.Stdin
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-
-	if err := cmd.Run(); err != nil {
+	if err := RunCommand("apt-get", args...); err != nil {
 		return err
 	}
 
@@ -136,9 +129,7 @@ func (a *AptManager) AddRepository(r RepositoryDefinition) error {
 	}
 
 	//adds repositories key
-	cmd := exec.Command("apt-key", "adv", "--fetch-keys", r["key"])
-
-	if err := cmd.Run(); err != nil {
+	if err := RunCommand("apt-key", "adv", "--fetch-keys", r["key"]); err != nil {
 		return err
 	}
 
@@ -154,9 +145,7 @@ func (a *AptManager) AddRepository(r RepositoryDefinition) error {
 	fmt.Fprintf(f, "deb %s %s %s\n", r["url"], a.distribution, components)
 
 	//update sources
-	cmd = exec.Command("apt-get", "update")
-
-	err = cmd.Run()
+	err = RunCommand("apt-get", "update")
 	if err != nil {
 		return err
 	}
@@ -166,9 +155,7 @@ func (a *AptManager) AddRepository(r RepositoryDefinition) error {
 }
 
 func getPackageManagerAndDistName() (PackageManager, string, error) {
-	cmd := exec.Command("lsb_release", "-i", "-c")
-
-	out, err := cmd.Output()
+	out, err := RunCommandOutput("lsb_release", "-i", "-c")
 	if err != nil {
 		return nil, "", fmt.Errorf("I only support ubuntu precise, and I do not seems to be run on this system since I cannot process `lsb_release -i -c' : %s", err)
 	}
