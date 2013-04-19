@@ -20,14 +20,16 @@ type repoDefsList []RepositoryDefinition
 // file or from a server.
 type Config struct {
 	GitRepositories []GitRepository
-	packagesByOS    map[string]PackageList
-	repDefByOS      map[string]repoDefsList
+	PackagesByOS    map[string]PackageList
+	RepDefByOS      map[string]repoDefsList
 }
 
 var config *Config = nil
 
 func initConfigFromJSON(c *Config) error {
-	log.Println("Fetching configuration from `", options.ConfigPath, "'")
+	if options.Verbose {
+		log.Println("Fetching configuration from `", options.ConfigPath, "'")
+	}
 	var r io.Reader
 	if ok, _ := regexp.MatchString(`\Ahttp://`, options.ConfigPath); ok == true {
 
@@ -78,12 +80,12 @@ func initDefault(c *Config) {
 		},
 	}
 
-	c.packagesByOS = map[string]PackageList{
+	c.PackagesByOS = map[string]PackageList{
 		"ubuntu/precise": PackageList{"liboncilla-dev", "git"},
 		"darwin":         PackageList{"liboncilla"},
 	}
 
-	c.repDefByOS = map[string]repoDefsList{
+	c.RepDefByOS = map[string]repoDefsList{
 		"ubuntu/precise": repoDefsList{
 			RepositoryDefinition{
 				"url":        "http://biorob2.epfl.ch/users/tuleu/ubuntu",
@@ -99,6 +101,21 @@ func initDefault(c *Config) {
 	}
 }
 
+func (c *Config) SaveConfig(w io.Writer) error {
+
+	data, err := json.MarshalIndent(c, "", "    ")
+	if err != nil {
+		return err
+	}
+
+	if _, err = w.Write(data); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
 // Gets a lazily initalized config object
 func GetConfig() *Config {
 	if config == nil {
@@ -106,7 +123,7 @@ func GetConfig() *Config {
 		config = &Config{}
 		initDefault(config)
 		err := initConfigFromJSON(config)
-		if err != nil {
+		if err != nil && options.Verbose {
 			log.Printf("[WARNING] error while reading config : %s\n", err)
 		}
 
@@ -116,7 +133,7 @@ func GetConfig() *Config {
 }
 
 func (c *Config) GetRepositoriesForOS(os string) ([]RepositoryDefinition, error) {
-	res, ok := c.repDefByOS[os]
+	res, ok := c.RepDefByOS[os]
 	if ok == false {
 		return []RepositoryDefinition{}, fmt.Errorf("Unsupported OS `%s'", os)
 	}
@@ -126,11 +143,42 @@ func (c *Config) GetRepositoriesForOS(os string) ([]RepositoryDefinition, error)
 }
 
 func (c *Config) GetPackagesForOS(os string) (PackageList, error) {
-	res, ok := c.packagesByOS[os]
+	res, ok := c.PackagesByOS[os]
 	if ok == false {
 		return PackageList{}, fmt.Errorf("Unsupported OS `%s'", os)
 	}
 
 	return res, nil
 
+}
+
+type GenerateConfigExecuter struct {
+}
+
+func (x *GenerateConfigExecuter) Execute(args []string) error {
+	if len(args) != 1 {
+		return fmt.Errorf("generate-config takes exactly one argument.")
+	}
+
+	file, err := os.Create(args[0])
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	c := GetConfig()
+
+	if err = c.SaveConfig(file); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func init() {
+	parser.AddCommand("generate-config",
+		"generates a template config file at a specified path",
+		"It will load the current config, and generates a dump of it in JSON format at the specified PATH.",
+		&GenerateConfigExecuter{})
 }
