@@ -45,6 +45,8 @@ func (c *CreateExecuter) Execute(args []string) error {
 		return err
 	}
 
+	log.Printf("Successfuly created new project tree at `%s'", path)
+
 	return nil
 }
 

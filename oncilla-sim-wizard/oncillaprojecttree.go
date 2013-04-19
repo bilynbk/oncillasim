@@ -378,7 +378,8 @@ func (o *OncillaProjectTree) Compile() error {
 		return err
 	}
 
-	for _, cacheDir := range cache.CachedGitRepositories() {
+	for n, cacheDir := range cache.CachedGitRepositories() {
+		log.Printf("\n\nRunning compilation scripts from cached repositiory %s\n\n", n)
 
 		//		for dir, _ := range dirs {
 
@@ -392,11 +393,20 @@ func (o *OncillaProjectTree) Compile() error {
 				return err
 			}
 
+			// runs script verbosely as they may not be ligtweight
+
+			saveVerbose := options.Verbose
+			options.Verbose = true
+
 			if err := RunCommand("make", "-C", o.Path, "-f", makefile); err != nil {
 				return err
 			}
+
+			options.Verbose = saveVerbose
+
 		}
 
+		log.Printf("\n\n")
 	}
 	return nil
 }
