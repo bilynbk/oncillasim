@@ -392,7 +392,7 @@ func (o *OncillaProjectTree) Compile() error {
 				return err
 			}
 
-			if err := RunCommand("make", "-f", makefile); err != nil {
+			if err := RunCommand("make", "-C", o.Path, "-f", makefile); err != nil {
 				return err
 			}
 		}
