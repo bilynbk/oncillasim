@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -14,6 +15,8 @@ import (
 
 type relDest string
 type relSrce string
+
+// Hexadecimal encoded checksum
 type checksum string
 
 // Represents an Oncilla Simulation project tree
@@ -189,7 +192,9 @@ func getChecksum(path string) (checksum, error) {
 		return "", err
 	}
 
-	return checksum(h.Sum(nil)), nil
+	cs := hex.EncodeToString(h.Sum(nil))
+
+	return checksum(cs), nil
 }
 
 func copyFile(src, dest string) error {
