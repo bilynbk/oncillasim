@@ -365,17 +365,33 @@ func (o *OncillaProjectTree) getListOfDirectories() map[string]bool {
 
 // Compiles all file in the project tree
 func (o *OncillaProjectTree) Compile() error {
-	for dir, _ := range o.getListOfDirectories() {
 
-		makefile := filepath.Join(dir, repoMakefile)
+	// dirs := o.getListOfDirectories()
 
-		if ok, _ := Exists(makefile); ok {
+	cache, err := GetCache()
+	if err != nil {
+		return err
+	}
+
+	for _, cacheDir := range cache.CachedGitRepositories() {
+
+		//		for dir, _ := range dirs {
+
+		cachedMakefile := filepath.Join(cacheDir, repoMakefile)
+		makefile := filepath.Join(o.Path, repoMakefile)
+
+		if ok, _ := Exists(cachedMakefile); ok {
+
+			err = copyFile(cachedMakefile, makefile)
+			if err != nil {
+				return err
+			}
+
 			if err := RunCommand("make", "-f", makefile); err != nil {
 				return err
 			}
 		}
 
 	}
-
 	return nil
 }
