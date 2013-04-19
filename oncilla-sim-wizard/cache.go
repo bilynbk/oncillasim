@@ -11,7 +11,7 @@ import (
 
 // represents the cache of the wizard
 type Cache struct {
-	GitRepositories map[string]GitRepository
+	gitRepositories map[string]GitRepository
 	root            string
 }
 
@@ -21,7 +21,7 @@ var cache *Cache = nil
 func GetCache() (*Cache, error) {
 	if cache == nil {
 		cache = &Cache{
-			GitRepositories: map[string]GitRepository{},
+			gitRepositories: map[string]GitRepository{},
 		}
 		if err := cache.updateCache(); err != nil {
 			return nil, err
@@ -126,8 +126,18 @@ func (c *Cache) updateCache() error {
 		if err := c.updateCachedGitRepository(name, g); err != nil {
 			return err
 		}
-		c.GitRepositories[name] = g
+		c.gitRepositories[name] = g
 	}
 
 	return nil
+}
+
+func (c *Cache) CachedGitRepositories() map[string]string {
+	res := make(map[string]string)
+
+	for n, _ := range c.gitRepositories {
+		res[n] = filepath.Join(c.root, "git", n)
+	}
+
+	return res
 }
