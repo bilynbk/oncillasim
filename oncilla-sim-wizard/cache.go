@@ -31,6 +31,34 @@ func GetCache() (*Cache, error) {
 	return cache, nil
 }
 
+func updateWithGitTag(tag string) error {
+	//check if this is a branch
+	log.Printf("Fetching tag or branch `%s'.\n", tag)
+
+	if err := RunCommand("git", "checkout", tag); err != nil {
+		return err
+	}
+
+	out, err := RunCommandOutput("git", "branch", "--list", tag)
+	if err != nil {
+		return err
+	}
+
+	//checks if we exactly got the branch name
+	if ok, _ := regexp.MatchString(`\s`+tag+`\s`, string(out)); ok == false {
+		//this was a tag, we are up to date
+		return nil
+	}
+
+	//this was a branch, we pull it !
+	if err = RunCommand("git", "pull", "origin", tag); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
 func (c *Cache) updateCachedGitRepository(name string, g GitRepository) error {
 
 	log.Printf("Caching git repository `%s' from `%s'.\n", name, g["url"])
@@ -66,9 +94,7 @@ func (c *Cache) updateCachedGitRepository(name string, g GitRepository) error {
 	}
 
 	if tag, hasTag := g["tag"]; hasTag == true {
-		log.Printf("Fetching tag `%s'.\n", tag)
-
-		if err := RunCommand("git", "checkout", tag); err != nil {
+		if err := updateWithGitTag(tag); err != nil {
 			return err
 		}
 	}
