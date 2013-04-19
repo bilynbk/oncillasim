@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
@@ -36,26 +37,32 @@ func Exists(path string) (bool, error) {
 	return false, err
 }
 
-func prepareCommand(cmd_ string, args []string) *exec.Cmd {
+func prepareCommand(cmd_ string, args []string) (*exec.Cmd, *bytes.Buffer) {
 	cmd := exec.Command(cmd_, args...)
 
 	if options.Verbose == true {
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = os.Stdout
-	} else {
-		cmd.Stderr = nil
-		cmd.Stdout = nil
+		return cmd, nil
 	}
 
-	return cmd
+	var out bytes.Buffer
+	cmd.Stderr = &out
+	cmd.Stdout = &out
+
+	return cmd, &out
 
 }
 
 func RunCommand(cmd_ string, args ...string) error {
-	cmd := prepareCommand(cmd_, args)
+	cmd, out := prepareCommand(cmd_, args)
 
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("Error while executing %s : %s", cmd.Args, err)
+		if options.Verbose {
+			return fmt.Errorf("Error while executing %s : %s", cmd.Args, err)
+		} else {
+			return fmt.Errorf("Error while executing %s : %s\nProgram out :\n%s", cmd.Args, err, out)
+		}
 	}
 
 	return nil
@@ -63,14 +70,18 @@ func RunCommand(cmd_ string, args ...string) error {
 }
 
 func RunCommandOutput(cmd_ string, args ...string) ([]byte, error) {
-	cmd := prepareCommand(cmd_, args)
+	cmd, cerr := prepareCommand(cmd_, args)
 
 	cmd.Stdout = nil
 
 	out, err := cmd.Output()
 
 	if err != nil {
-		return out, fmt.Errorf("Error while executing %s : %s", cmd.Args, err)
+		if options.Verbose {
+			return out, fmt.Errorf("Error while executing %s : %s", cmd.Args, err)
+		} else {
+			return out, fmt.Errorf("Error while executing %s : %s\n.Program stderr :\n%s", cmd.Args, err, cerr)
+		}
 	}
 
 	return out, err
