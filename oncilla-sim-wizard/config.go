@@ -64,14 +64,17 @@ func initDefault(c *Config) {
 		GitRepository{
 			"name": "liboncilla",
 			"url":  "https://redmine.amarsi-project.eu/git/quaddrivers.git",
+			"tag":  "oncilla-wizard-0.2",
 		},
 		GitRepository{
 			"name": "liboncilla-webots",
 			"url":  "https://redmine.amarsi-project.eu/git/liboncilla-webots.git",
+			"tag":  "oncilla-wizard-0.2",
 		},
 		GitRepository{
 			"name": "libcca-oncilla",
 			"url":  "https://redmine.amarsi-project.eu/git/oncilla-cca.git",
+			"tag":  "oncilla-wizard-0.2",
 		},
 	}
 
