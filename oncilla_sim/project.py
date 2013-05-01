@@ -6,27 +6,21 @@ import shutil
 from template import WebotsTemplate
 
 class WebotsProject:
-    verbose = True
-    proj_path = None
-    ctrl_path = None
-    plugin_path = None
-    worlds_path = None
-    tmp_path = None
-    rciexamples = None
-    ccaexamples = None
+    VERBOSE = True
+    PROJECT_PATH = None
+    TMP_PATH = None
+    REPO_LIST_FILE = ".oncilla-sim-wizard.list"
+    REPO_MAKE_FILE = ".oncilla-sim-wizard.make"
     
     def __init__(self, path, verbose=True, clean=False):
-        self.verbose = verbose
-        self.clean = clean
-        self.proj_path = path
-        self.ctrl_path = os.path.join(path, 'controllers')
-        self.worlds_path = os.path.join(path, 'worlds')
-        self.plugin_path = os.path.join(path, 'plugins/physics/liboncilla-webots-plugin')
-        self.tmp_path = os.path.join(self.proj_path, '.tmp') 
+        self.VERBOSE = verbose
+        self.CLEAN = clean
+        self.PROJECT_PATH = path
+        self.TMP_PATH = os.path.join(self.PROJECT_PATH, '.tmp') 
         
     def create(self, template):
-        if self.verbose:
-            print 'Creating project at', self.proj_path
+        if self.VERBOSE:
+            print 'Creating project at', self.PROJECT_PATH
             
         if not self.isEmpty():
             if self.isProjectFolder():
@@ -34,9 +28,11 @@ class WebotsProject:
             else:
                 exit('''The given folder is not empty, but doesn`t seem to be a simulation project. Try another path.''')
         else:
-            template.createSkeleton(self.proj_path)
-            self.rciexamples = template.createRCIExample(self.proj_path)
-            self.ccaexamples = template.createCCAExamples(self.proj_path)
+            template.createSkeleton(self.PROJECT_PATH)
+            
+            # TODO Loop through projects configured in the wizard
+            self.rciexamples = template.createRCIExample(self.PROJECT_PATH)
+            self.ccaexamples = template.createCCAExamples(self.PROJECT_PATH)
             self.compilePlugins()
             self.compileExamples()
         
@@ -46,25 +42,27 @@ class WebotsProject:
         elif not self.isProjectFolder():
             exit('''Error: The given folder is not empty, but doesn`t seem to be a simulation project.''') 
         
-        if self.verbose:
-            print 'Updating project at', self.proj_path
+        if self.VERBOSE:
+            print 'Updating project at', self.PROJECT_PATH
         
         # First we create a temporary new project
-        if os.path.exists(self.tmp_path):
-            shutil.rmtree(self.tmp_path)
-        template.createSkeleton(self.tmp_path)
-        self.rciexamples = template.createRCIExample(self.tmp_path)
-        self.ccaexamples = template.createCCAExamples(self.tmp_path)
-        if self.verbose:
-            print 'Syncing', self.tmp_path, 'and', self.proj_path
-        template.syncDir(self.tmp_path, self.tmp_path, self.proj_path)
+        if os.path.exists(self.TMP_PATH):
+            shutil.rmtree(self.TMP_PATH)
+        template.createSkeleton(self.TMP_PATH)
+        
+        # TODO Loop through projects configured in the wizard
+        self.rciexamples = template.createRCIExample(self.TMP_PATH)
+        self.ccaexamples = template.createCCAExamples(self.TMP_PATH)
+        if self.VERBOSE:
+            print 'Syncing', self.TMP_PATH, 'and', self.PROJECT_PATH
+        template.syncDir(self.TMP_PATH, self.TMP_PATH, self.PROJECT_PATH)
         self.compilePlugins()
         self.compileExamples()
-        if os.path.exists(self.tmp_path):
-            shutil.rmtree(self.tmp_path)
+        if os.path.exists(self.TMP_PATH):
+            shutil.rmtree(self.TMP_PATH)
         
     def isEmpty(self):
-        if os.path.exists(self.proj_path):
+        if os.path.exists(self.PROJECT_PATH):
             return False
         else:
             return True
@@ -73,9 +71,9 @@ class WebotsProject:
     Check if given project folder actually contains a project
     """
     def isProjectFolder(self):
-        if os.path.exists(os.path.join(self.proj_path, 'controllers')) \
-            or os.path.exists(os.path.join(self.proj_path, 'worlds')) \
-            or os.path.exists(os.path.join(self.proj_path, 'plugins')):
+        if os.path.exists(os.path.join(self.PROJECT_PATH, 'controllers')) \
+            or os.path.exists(os.path.join(self.PROJECT_PATH, 'worlds')) \
+            or os.path.exists(os.path.join(self.PROJECT_PATH, 'plugins')):
             return True
         return False
 
@@ -83,27 +81,31 @@ class WebotsProject:
     Compiles the physics plugin, necessary for libwebots 
     """
     def compilePlugins(self):
-        os.system('make --directory ' + self.plugin_path)
-        if self.verbose:
-            print 'Compiled physics plugin at', self.plugin_path
+        os.system('make --directory ' + self.PLUGIN_PATH)
+        if self.VERBOSE:
+            print 'Compiled physics plugin at', self.PLUGIN_PATH
 
     """
     Compiling all examples 
     """
     def compileExamples(self):
-        if self.verbose:
+        if self.VERBOSE:
             print 'Compiling Examples'
         
+        # TODO Loop through projects configured in the wizard
         for example in (self.rciexamples + self.ccaexamples):
-            if self.clean:
-                if self.verbose:
+            if self.CLEAN:
+                if self.VERBOSE:
                     print '* Cleaning example', example
-                os.system('make clean --directory ' + os.path.join(self.ctrl_path, example))
+                os.system('make CLEAN --directory ' + os.path.join(self.CONTROLLER_PATH, example))
             
-            if self.verbose:
+            if self.VERBOSE:
                 print '* Compiling example', example
-            os.system('make --directory ' + os.path.join(self.ctrl_path, example))
+            
+            # TODO Use makefile configured for the project
+            os.system('make --directory ' + os.path.join(self.CONTROLLER_PATH, example))
+            
             # Check, if controller was built
-            if not os.path.exists(os.path.join(self.ctrl_path, example, example)):
+            if not os.path.exists(os.path.join(self.CONTROLLER_PATH, example, example)):
                 exit('Error: Compilation of ' + example + ' failed.')
         print 'Examples successfully compiled. Open example world files with webots.'
