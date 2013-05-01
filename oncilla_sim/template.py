@@ -31,18 +31,16 @@ class WebotsTemplate:
                      '/usr/local/share/oncilla-sim/wizard.cfg',
                      '/usr/share/oncilla-sim/wizard.cfg'])
 
-    def prepare(self):
-        self.update()
-
     def isEmpty(self):
         if os.path.exists(self.TEMPLATE_PATH):
             return False
         else:
             return True
-
-    def update(self):
+    def prepare(self):
         if self.VERBOSE:
             print 'Updating project template at', self.TEMPLATE_PATH
+        if not os.path.exists(self.TEMPLATE_PATH):
+            os.makedirs(self.TEMPLATE_PATH)
 
         # Loop through config sections and update
         for repo in self.CONFIG.sections():

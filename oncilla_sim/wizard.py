@@ -17,7 +17,7 @@ class Wizard:
     TEMPLATE = None
 
     def __init__(self, path, verbose=True, online=True,
-                tmpl_path='/tmp/oncillawizard/template',
+                tmpl_path='/cache',
                 clean=False):
         self.VERBOSE = verbose
         self.ONLINE = online
@@ -54,7 +54,7 @@ class Wizard:
             print 'Updating project at', self.PROJECT_PATH
         # exit('Error: Updating a PROJECT is not yet implemented.')
         self.TEMPLATE.prepare()
-        self.PROJECT.update(self.TEMPLATE)
+        self.PROJECT.create(self.TEMPLATE)
 
     def getWebotsHome(self):
         if self.VERBOSE:
@@ -75,8 +75,15 @@ class Wizard:
             print '... found webots at', self.WEBOTS_PATH
 
 def main():
-    # TODO Choose appropriate cache path according to operating system
-    DEFAULT_TEMPLATE_PATH = '/tmp/onc/tmpl'
+    # Decide for meaningful cache folder
+    if os.name == 'posix': # Linux-like
+        DEFAULT_TEMPLATE_PATH = os.path.join(os.getenv("HOME"), '.cache/oncilla-sim')
+    elif os.name == 'nt': # Windows
+        DEFAULT_TEMPLATE_PATH = 'C:\Windows\Temporary Internet Files'
+    elif os.name == 'os2': # Mac
+        DEFAULT_TEMPLATE_PATH = os.path.join(os.getenv("HOME"), 'Library/Cache/oncilla-sim')
+    else:
+        DEFAULT_TEMPLATE_PATH = '/cache'
 
     usage = "Usage: %prog [options] (create / update) path"
     parser = ArgumentParser()
@@ -91,7 +98,7 @@ def main():
                   help="force a clean (re)compilation of all examples")
     parser.add_argument("-t", "--template_path",
                   dest="TEMPLATE_PATH", default=DEFAULT_TEMPLATE_PATH,
-                  help="specify folder to use for temporary files during project setup")
+                  help="specify folder to use for temporary files during project setup [" + DEFAULT_TEMPLATE_PATH + "]")
     parser.add_argument("command", help="command, either 'create' or 'update'")
     parser.add_argument("path", help="destination / path of the project")
     args = parser.parse_args()
