@@ -66,6 +66,7 @@ class Wizard:
             print '... found webots at', self.WEBOTS_PATH
          
 def main():
+    # TODO Choose appropriate cache path according to operating system
     DEFAULT_TEMPLATE_PATH = '/tmp/onc/tmpl'
     
     usage = "Usage: %prog [options] (create / update) path"

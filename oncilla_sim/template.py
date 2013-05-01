@@ -9,21 +9,17 @@ import ConfigParser
 from git import *
 
 class WebotsTemplate:
-    verbose = True
-    online = True
-    tmpl_path = None
-    ow_path = None
-    onc_path = None
-    cca_path = None
-    data_path = None
-    tmp_path = None
-    sync_ignore = False
-    sync_overwrite = False
+    VERBOSE = True
+    ONLINE = True
+    TEMPLATE_PATH = None
+    TMP_PATH = None
+    SYNC_IGNORE = False
+    SYNC_OVERWRITE = False
 
     def __init__(self, path, verbose=True, online=True):
-        self.verbose = verbose
-        self.online = online
-        self.tmpl_path = path
+        self.VERBOSE = verbose
+        self.ONLINE = online
+        self.TEMPLATE_PATH = path
         
         self.ow_path = os.path.join(path, 'liboncilla-webots')
         self.onc_path = os.path.join(path, 'liboncilla')
@@ -34,6 +30,10 @@ class WebotsTemplate:
         config.read(['wizard.cfg',
                      '/usr/local/share/oncilla-sim/wizard.cfg',
                      '/usr/share/oncilla-sim/wizard.cfg'])
+        
+        print "+++++++++++"
+        print config.sections()
+        
         self.onc_remote = config.get('liboncilla', 'remote')
         self.onc_tag = config.get('liboncilla', 'tag')
         self.ow_remote = config.get('liboncilla-webots', 'remote')
@@ -43,34 +43,34 @@ class WebotsTemplate:
 
     def prepare(self):
         if not self.isEmpty():
-            if self.verbose:
-                print 'Folder is not empty, checking if template already existing at', self.tmpl_path
+            if self.VERBOSE:
+                print 'Folder is not empty, checking if template already existing at', self.TEMPLATE_PATH
             if self.isTemplateFolder():
-                if self.verbose:
+                if self.VERBOSE:
                     print 'Template is already existing. Looking for updates.'
-                if self.online:
+                if self.ONLINE:
                     self.update()
             else:
                 exit('''The template folder seems to contain other content. Try choosing a different template folder.''')
         else:
-            if self.verbose:
+            if self.VERBOSE:
                 print 'Template folder is not existing yet. Creating.'
-            if not self.online:
+            if not self.ONLINE:
                 exit('Error: I need to fetch the project template, but I am in offline mode.')
             self.create()
         
     def isEmpty(self):
-        if os.path.exists(self.tmpl_path):
+        if os.path.exists(self.TEMPLATE_PATH):
             return False
         else:
             return True
         
     def update(self):
-        if self.verbose:
-            print 'Updating project template at', self.tmpl_path        
+        if self.VERBOSE:
+            print 'Updating project template at', self.TEMPLATE_PATH        
         
         # Fetch updates for liboncilla-webots
-        if self.verbose:
+        if self.VERBOSE:
             print '* Updating skeleton from liboncilla-webots ...'
         g = Git(self.ow_path)
         g.execute(['git', 'fetch', '--all'])
@@ -78,7 +78,7 @@ class WebotsTemplate:
         g.checkout(self.ow_tag)
         
         # Fetch updates for liboncilla for example 1
-        if self.verbose:
+        if self.VERBOSE:
             print '* Updating examples from liboncilla ...'
         g = Git(self.onc_path)
         g.execute(['git', 'fetch', '--all'])
@@ -86,7 +86,7 @@ class WebotsTemplate:
         g.checkout(self.onc_tag)
         
         # Fetch updates for cca-oncilla for examples 2-4
-        if self.verbose:
+        if self.VERBOSE:
             print '* Updating examples from cca-oncilla ...'
         g = Git(self.cca_path)
         g.execute(['git', 'fetch', '--all'])
@@ -94,12 +94,12 @@ class WebotsTemplate:
         g.checkout(self.cca_tag)
 
     def create(self):
-        if self.verbose:
+        if self.VERBOSE:
             print 'Creating project template'
-        os.makedirs(self.tmpl_path)
+        os.makedirs(self.TEMPLATE_PATH)
         
         # Make a blank checkout of liboncilla-webots
-        if self.verbose:
+        if self.VERBOSE:
             print '* Cloning project template from liboncilla-webots ...'
 
         if not os.path.exists(self.ow_path):
@@ -111,7 +111,7 @@ class WebotsTemplate:
         g.checkout(self.ow_tag)
         
         # Make a blank checkout of liboncilla for example 1
-        if self.verbose:
+        if self.VERBOSE:
             print '* Cloning examples from liboncilla ...'
         if not os.path.exists(self.onc_path):
             os.makedirs(self.onc_path)
@@ -122,7 +122,7 @@ class WebotsTemplate:
         g.checkout(self.onc_tag)
         
         # Make a blank checkout of cca-oncilla for examples 2-4
-        if self.verbose:
+        if self.VERBOSE:
             print '* Cloning examples from cca-oncilla ...'
         if not os.path.exists(self.cca_path):
             os.makedirs(self.cca_path)
@@ -139,7 +139,7 @@ class WebotsTemplate:
         return True        
     
     def createSkeleton(self, target):
-        if self.verbose:
+        if self.VERBOSE:
             print '* Creating Project Skeleton'
         shutil.copytree(self.data_path,
             target,
@@ -147,7 +147,7 @@ class WebotsTemplate:
             ignore=shutil.ignore_patterns('.git*'))
             
     def updateSkeleton(self, target):
-        if self.verbose:
+        if self.VERBOSE:
             print '* Updating Project Skeleton'        
         self.syncDir(self.data_path, self.data_path, target)
 
@@ -169,7 +169,7 @@ class WebotsTemplate:
         for controller in examples:
             fn = open(os.path.join(target + "/worlds", controller + ".wbt"), "w+")
             fn.write(self.get_world_file_for(controller))
-            if self.verbose:
+            if self.VERBOSE:
                 print '* Created RCI Example:', target + "/worlds" + '/' + controller + ".wbt"
                 
         return examples
@@ -199,7 +199,7 @@ class WebotsTemplate:
         for controller in examples:
             fn = open(os.path.join(target + "/worlds", controller + ".wbt"), "w+")
             fn.write(self.get_world_file_for(controller))
-            if self.verbose:
+            if self.VERBOSE:
                 print '* Created CCA Example:', target + "/worlds" + '/' + controller + ".wbt"
                 
         return examples
@@ -218,7 +218,7 @@ class WebotsTemplate:
                 required_folder = os.path.join(dest, os.path.relpath(os.path.join(root, name), syncdir))
                 if not os.path.exists(required_folder):
                     os.makedirs(required_folder)
-                    if self.verbose:
+                    if self.VERBOSE:
                         print '** Created', required_folder
         
         # If file doesn exist, copy it
@@ -241,7 +241,7 @@ class WebotsTemplate:
     def syncFile(self, srcfile, destfile):
         if not os.path.exists(destfile):
             shutil.copyfile(srcfile, destfile)
-            if self.verbose:
+            if self.VERBOSE:
                 print '** Copied', srcfile, ' to ', destfile
         else:
             # File exists, compare
@@ -250,17 +250,17 @@ class WebotsTemplate:
                 return
             else:
                 # Files not the same, handle that
-                if self.sync_ignore:
+                if self.SYNC_IGNORE:
                     return
-                elif self.sync_overwrite:
+                elif self.SYNC_OVERWRITE:
                     shutil.copyfile(destfile, destfile+'.backup') # Backup
                     shutil.copyfile(srcfile, destfile) # Overwrite file
-                    if self.verbose:
+                    if self.VERBOSE:
                         print '** Copied', srcfile, ' to ', destfile
                 else:
                     if self.askForOverwriting(destfile):
                         shutil.copyfile(srcfile, destfile) # Overwrite file
-                        if self.verbose:
+                        if self.VERBOSE:
                             print '** Copied', srcfile, ' to ', destfile
                     else:
                         return
@@ -278,9 +278,9 @@ class WebotsTemplate:
             choice = raw_input().lower()
             
             if choice == 'i':
-                self.sync_ignore = True
+                self.SYNC_IGNORE = True
             elif choice == 'o':
-                self.sync_overwrite = True
+                self.SYNC_OVERWRITE = True
             
             if choice == '' or choice == 'n' or choice == 'i':
                 return False
