@@ -85,7 +85,7 @@ def main():
     elif platform.system() == 'Windows': # Windows
         DEFAULT_TEMPLATE_PATH = 'C:\Windows\Temporary Internet Files'
     elif platform.system() == 'Darwin': # Mac
-        DEFAULT_TEMPLATE_PATH = os.path.join(os.getenv("HOME"), 'Library/Cache/oncilla-sim')
+        DEFAULT_TEMPLATE_PATH = os.path.join(os.getenv("HOME"), 'Library/Caches/oncilla-sim')
     else:
         DEFAULT_TEMPLATE_PATH = '/cache'
 
