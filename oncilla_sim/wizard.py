@@ -2,6 +2,7 @@
 #
 import os
 import sys
+import platform
 from argparse import ArgumentParser
 
 from project import WebotsProject
@@ -64,7 +65,10 @@ class Wizard:
             print '... WEBOTS_HOME environment variable is not set.'
 
             # Try common places
-            self.WEBOTS_PATH = '/usr/local/webots'
+            if platform.system() == 'Darwin': # Mac
+                self.WEBOTS_PATH = '/Applications/Webots'
+            else:
+                self.WEBOTS_PATH = '/usr/local/webots'
             if not os.path.exists(self.WEBOTS_PATH):
                 exit('Could not find WEBOTS_HOME')
             else:
@@ -76,11 +80,11 @@ class Wizard:
 
 def main():
     # Decide for meaningful cache folder
-    if os.name == 'posix': # Linux-like
+    if platform.system() == 'Linux': # Linux-like
         DEFAULT_TEMPLATE_PATH = os.path.join(os.getenv("HOME"), '.cache/oncilla-sim')
-    elif os.name == 'nt': # Windows
+    elif platform.system() == 'Windows': # Windows
         DEFAULT_TEMPLATE_PATH = 'C:\Windows\Temporary Internet Files'
-    elif os.name == 'os2': # Mac
+    elif platform.system() == 'Darwin': # Mac
         DEFAULT_TEMPLATE_PATH = os.path.join(os.getenv("HOME"), 'Library/Cache/oncilla-sim')
     else:
         DEFAULT_TEMPLATE_PATH = '/cache'
