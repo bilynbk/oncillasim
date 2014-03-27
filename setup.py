@@ -51,8 +51,8 @@ except OSError, e:
         raise
 
 setup(
-    name='oncilla-sim-project-wizard',
-    version='0.2.0~rc2',
+    name='oncilla-sim-0.2',
+    version='0.2.1',
     packages=['oncilla_sim'],
     license='Lesser General Public License version 3',
     long_description=open('README.rst').read(),
