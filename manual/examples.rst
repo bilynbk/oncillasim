@@ -4,6 +4,11 @@
  Examples
 ==========
 
+.. image:: images/oncilla-api-levels.png
+  :width: 300px
+  :align: right
+  :target: _images/oncilla-api-levels.png
+
 When setting up a new project with the :ref:`Project Wizard <wizard>` it will
 come with a set of example to learn the usage of the simulation environment.
 
