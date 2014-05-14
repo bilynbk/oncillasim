@@ -21,15 +21,21 @@ class WebotsTemplate:
     SYNC_OVERWRITE = False
     CONFIG = None
 
-    def __init__(self, path, verbose=True, online=True):
+    def __init__(self, path, w_path,verbose=True, online=True):
         self.VERBOSE = verbose
         self.ONLINE = online
         self.TEMPLATE_PATH = path
-
+        self.WIZARD_CONFIG_PATH = w_path
         self.CONFIG = ConfigParser.RawConfigParser()
-        self.CONFIG.read(['wizard.cfg',
-                     '/usr/local/share/oncilla-sim/wizard.cfg',
-                     '/usr/share/oncilla-sim/wizard.cfg'])
+        result = self.CONFIG.read([self.WIZARD_CONFIG_PATH,
+                                   'wizard.cfg',
+                                   '/usr/local/share/oncilla-sim/wizard.cfg',
+                                   '/usr/share/oncilla-sim/wizard.cfg'])
+        if len(result) < 1:
+            print "Could not find wizard.cfg, please provide -w as an " \
+                  "command line argument [full path]"
+            sys.exit(1)
+
 
     def isEmpty(self):
         if os.path.exists(self.TEMPLATE_PATH):

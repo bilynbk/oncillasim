@@ -18,18 +18,25 @@ class Wizard:
     TEMPLATE = None
 
     def __init__(self, path, verbose=True, online=True,
-                tmpl_path='/cache',
+                tmpl_path='/cache', w_path="",
                 clean=False):
         self.VERBOSE = verbose
         self.ONLINE = online
         self.PROJECT_PATH = path
         self.TEMPLATE_PATH = tmpl_path
+        self.WIZARD_CONFIG_PATH = w_path
         self.CLEAN = clean
 
         self.getWebotsHome()
 
-        self.PROJECT = WebotsProject(self.PROJECT_PATH, verbose=verbose, clean=clean)
-        self.TEMPLATE = WebotsTemplate(self.TEMPLATE_PATH, verbose=verbose, online=online)
+        self.PROJECT = WebotsProject(self.PROJECT_PATH,
+                                     verbose=verbose,
+                                     clean=clean)
+
+        self.TEMPLATE = WebotsTemplate(self.TEMPLATE_PATH,
+                                       self.WIZARD_CONFIG_PATH,
+                                       verbose=verbose,
+                                       online=online)
 
     def createProject(self):
         if self.VERBOSE:
@@ -80,6 +87,8 @@ class Wizard:
 
 def main():
     # Decide for meaningful cache folder
+    DEFAULT_WIZARD_CONFIG_PATH = os.path.join(os.getenv("HOME"))
+
     if platform.system() == 'Linux': # Linux-like
         DEFAULT_TEMPLATE_PATH = os.path.join(os.getenv("HOME"), '.cache/oncilla-sim')
     elif platform.system() == 'Windows': # Windows
@@ -103,12 +112,16 @@ def main():
     parser.add_argument("-t", "--template_path",
                   dest="TEMPLATE_PATH", default=DEFAULT_TEMPLATE_PATH,
                   help="specify folder to use for temporary files during project setup [" + DEFAULT_TEMPLATE_PATH + "]")
+    parser.add_argument("-w", "--wizard_config_path",
+                  dest="WIZARD_CONFIG_PATH", default=DEFAULT_WIZARD_CONFIG_PATH,
+                  help="specify folder to look for wizard.cfg file [" + DEFAULT_WIZARD_CONFIG_PATH + "]")
     parser.add_argument("command", help="command, either 'create' or 'update'")
     parser.add_argument("path", help="destination / path of the project")
     args = parser.parse_args()
 
     wizard = Wizard(args.path, verbose=args.VERBOSE, online=args.ONLINE,
-                tmpl_path=args.TEMPLATE_PATH, clean=args.CLEAN)
+                tmpl_path=args.TEMPLATE_PATH, w_path=args.WIZARD_CONFIG_PATH,
+                clean=args.CLEAN)
 
     if args.command == "create":
         wizard.createProject()
